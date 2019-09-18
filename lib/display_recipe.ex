@@ -1,18 +1,10 @@
-defmodule DisplayRecipe do
-  @moduledoc """
-  Documentation for DisplayRecipe.
-  """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> DisplayRecipe.hello()
-      :world
-
-  """
-  def hello do
-    :world
+defmodule DisplayRecipe.CLI do
+  def main(_args) do
+    IO.puts("Hello from inside the Display Recipe module")
   end
+
+  def print(text) do
+    IO.puts(text)
+  end 
+
 end
