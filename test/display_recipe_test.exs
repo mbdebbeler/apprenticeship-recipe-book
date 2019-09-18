@@ -1,8 +1,8 @@
 defmodule DisplayRecipeTest do
   use ExUnit.Case
-  doctest DisplayRecipe
+  import ExUnit.CaptureIO
 
-  test "greets the world" do
-    assert DisplayRecipe.hello() == :world
+  test "prints a string to stdout" do
+    assert capture_io(fn -> DisplayRecipe.print("Ice Cubes") end) == "Ice Cubes\n"
   end
 end
