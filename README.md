@@ -1,21 +1,19 @@
-# DisplayRecipe
+## Description
 
-**TODO: Add description**
+A recipe app for the command line that takes a text file and returns a grocery list.
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `recipe_book` to your list of dependencies in `mix.exs`:
+1. Clone this repo by clicking the green button at the top right.
 
-```elixir
-def deps do
-  [
-    {:recipe_book, "~> 0.1.0"}
-  ]
-end
-```
+2. Navigate into the directory.
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/recipe_book](https://hexdocs.pm/recipe_book).
+  ```$ cd recipe-book```
 
+3. Compile the app.
+
+  ```mix escript.build```
+
+4. Run it!
+
+  ```./recipe-book```
