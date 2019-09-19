@@ -1,5 +1,4 @@
 defmodule DisplayRecipe.CLI do
-
   @outgoing_messages %{
     :welcome_screen => "Welcome to Recipe Book!"
   }
@@ -10,6 +9,5 @@ defmodule DisplayRecipe.CLI do
 
   def print(text) do
     IO.puts(text)
-  end 
-
   end
+end
