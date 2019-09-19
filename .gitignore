@@ -22,3 +22,5 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 recipe_book-*.tar
 
+# Ignore recipe_book binary
+/recipe_book/
