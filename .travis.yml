@@ -1,2 +1,7 @@
 language: elixir
 elixir: '1.9.1'
+jobs:
+  include:
+    - stage: "Tests"
+      name: "Unit Tests"
+      script: mix test
