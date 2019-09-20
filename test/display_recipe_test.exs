@@ -7,6 +7,6 @@ defmodule DisplayRecipeTest do
   end
 
   test "#main prints a welcome message" do
-    assert capture_io(fn -> DisplayRecipe.CLI.main("") end) == "Welcome to Recipe Book!\n"
+    assert capture_io(fn -> DisplayRecipe.CLI.main end) == "Welcome to Recipe Book!\n"
   end
 end
