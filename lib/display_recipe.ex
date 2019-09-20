@@ -1,18 +1,23 @@
-defmodule DisplayRecipe do
-  @moduledoc """
-  Documentation for DisplayRecipe.
-  """
+defmodule DisplayRecipe.CLI do
+  use Application
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> DisplayRecipe.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def start(_type, _args) do
+    children = []
+    Supervisor.start_link(children, strategy: :one_for_one)
   end
+
+  @outgoing_messages %{
+    :welcome_screen => "Welcome to Recipe Book!"
+  }
+
+  def main do
+    print(@outgoing_messages[:welcome_screen])
+  end
+
+  def print(text) do
+    IO.puts(text)
+  end 
+
 end
+
+DisplayRecipe.CLI.main

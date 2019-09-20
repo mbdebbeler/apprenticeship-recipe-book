@@ -14,6 +14,7 @@ defmodule DisplayRecipe.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      mod: {DisplayRecipe.CLI, []},
       extra_applications: [:logger]
     ]
   end
@@ -25,4 +26,5 @@ defmodule DisplayRecipe.MixProject do
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
   end
+
 end
