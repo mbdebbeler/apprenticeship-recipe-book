@@ -3,5 +3,11 @@ elixir:
   - '1.9.1'
 otp_release:
   - '22'
+env:
+  - MIX_ENV=test
 script:
   - mix test
+cache:
+  directories:
+    - _build
+    - deps
