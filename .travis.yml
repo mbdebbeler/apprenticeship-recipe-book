@@ -1,6 +1,7 @@
 language: elixir
-elixir: '1.9.1'
-env:
-  - MIX_ENV=test
+elixir:
+  - '1.9.1'
+otp_release:
+  - '22'
 script:
-  - mix do deps.get, compile --warnings-as-errors,
+  - mix test
