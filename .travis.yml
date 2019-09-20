@@ -1,7 +1,6 @@
 language: elixir
 elixir: '1.9.1'
-jobs:
-  include:
-    - stage: "Tests"
-      name: "Unit Tests"
-      script: mix test
+env:
+  - MIX_ENV=test
+script:
+  - mix do deps.get, compile --warnings-as-errors,
