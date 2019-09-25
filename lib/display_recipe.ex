@@ -10,4 +10,9 @@ defmodule DisplayRecipe.CLI do
   def print(text) do
     IO.puts(text)
   end
+
+  def read_file(filepath) do
+    File.read!(filepath)
+  end
+
 end
