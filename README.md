@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mbdebbeler/apprenticeship-recipe-book.svg?branch=master)](https://travis-ci.org/mbdebbeler/apprenticeship-recipe-book)
+
 ## Description
 
 A recipe app for the command line that takes a text file and returns a grocery list.
@@ -10,10 +12,10 @@ A recipe app for the command line that takes a text file and returns a grocery l
 
   ```$ cd recipe-book```
 
-3. Compile the app.
+3. Open iex, the Elixir REPL.
 
-  ```mix escript.build```
+  ```iex -S mix```
 
-4. Run it!
+4. Call methods as you please!
 
-  ```./recipe-book```
+  ```DisplayRecipe.CLI.print_file_contents```
