@@ -4,7 +4,7 @@ defmodule DisplayRecipe.CLI do
   }
 
   @recipe_files %{
-    :ice_cubes => "../recipes/ice_cubes.txt"
+    :ice_cubes => Path.expand("../recipes/ice_cubes.txt")
   }
 
   def main do
