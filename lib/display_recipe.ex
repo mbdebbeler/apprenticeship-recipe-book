@@ -7,7 +7,7 @@ defmodule DisplayRecipe.CLI do
     :ice_cubes => "../recipes/ice_cubes.txt"
   }
 
-  def main(_args) do
+  def main do
     print(@user_prompts[:welcome_screen])
   end
 
@@ -21,7 +21,7 @@ defmodule DisplayRecipe.CLI do
 
   def print_file_contents do
     print(read_file(@recipe_files[:ice_cubes]))
-  end 
+  end
 
   def print_file_contents(filepath) do
     print(read_file(filepath))
