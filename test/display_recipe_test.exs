@@ -55,11 +55,38 @@ defmodule DisplayRecipeTest do
     end
   end
 
-  describe "find_ingredients/1" do
+  describe "is_after_ingredients/1" do
     test "when passed a list of strings, it will return a sub-list of strings between 'ingredients' and a blank line" do
-      example_recipe_chunk = ["foo", "bar", "", "Ingredients:", "baz", "zab", "", "Recipes:", "bab"]
+      example_recipe_chunk = [
+        "foo",
+        "bar",
+        "",
+        "Ingredients:",
+        "baz",
+        "zab",
+        "",
+        "Recipes:",
+        "bab"
+      ]
 
-      assert find_ingredients(example_recipe_chunk) == ["baz", "zab"]
+      assert is_after_ingredients(example_recipe_chunk) == ["baz", "zab", "", "Recipes:", "bab"]
+    end
+  end
+
+  describe "is_before_section_break" do
+    test "when passed a list of strings, it will return a sub-list of strings before the blank line" do
+      example_recipe_chunk = ["baz", "zab", "", "Recipes:", "bab"]
+
+      assert is_before_section_break(example_recipe_chunk) == ["baz", "zab"]
+    end
+  end
+
+  describe "print_grocery_list" do
+    test "when passed a filepath, it will print a formatted list of the file contents designated as ingredients" do
+      example_filepath = "../recipes/ice_cubes.txt"
+      expected_output = "Groceries for this recipe:\n- 2 cups water (approximately)\n- 2 tablespoons water (additional if needed)\n"
+
+      assert capture_io(fn -> print_grocery_list(example_filepath) end) == expected_output
     end
   end
 end

@@ -32,39 +32,34 @@ defmodule DisplayRecipe.CLI do
     |> String.split("\n")
   end
 
-  def find_ingredients(recipe_lines) do
-    find_ingredients(recipe_lines, [])
+  def is_after_ingredients(recipe_lines) do
+    is_after_ingredients(recipe_lines, [])
   end
 
-  def find_ingredients([recipe_line | remaining_lines], ingredients_list) do
+  def is_after_ingredients([recipe_line | remaining_lines], ingredients_list) do
     case recipe_line do
       "Ingredients:" ->
-        is_before_next_section(remaining_lines)
+        remaining_lines
 
       _ ->
-        find_ingredients(remaining_lines, ingredients_list)
+        is_after_ingredients(remaining_lines, ingredients_list)
     end
   end
 
-  def find_ingredients([], ingredients_list), do: ingredients_list
+  def is_after_ingredients([], ingredients_list), do: ingredients_list
 
-  def is_before_next_section(remaining_lines) do
-    is_before_next_section(remaining_lines, [])
+  def is_before_section_break(remaining_lines) do
+    section_break_index = Enum.find_index(remaining_lines, fn x -> x == "" end)
+    Enum.slice(remaining_lines, 0..(section_break_index - 1))
   end
 
-  def is_before_next_section([recipe_line | remaining_lines], instruction_list) do
-    print remaining_lines
-    print recipe_line
-    case recipe_line do
-      "bab" ->
-        print ~s(I am bab: #{recipe_line})
-
-      _ ->
-        is_before_next_section(remaining_lines, instruction_list)
-
-    end
+  def print_grocery_list(filepath) do
+    print("Groceries for this recipe:")
+    filepath
+    |> read_file
+    |> split_file_by_lines
+    |> is_after_ingredients
+    |> is_before_section_break
+    |> Enum.each(fn x -> print("- " <> x) end)
   end
-
-  def is_before_next_section([], instruction_list), do: instruction_list
-
 end
