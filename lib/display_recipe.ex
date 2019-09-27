@@ -66,3 +66,5 @@ defmodule DisplayRecipe.CLI do
   end
 
 end
+
+DisplayRecipe.CLI.main
