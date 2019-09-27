@@ -39,7 +39,7 @@ defmodule DisplayRecipe.CLI do
   def find_ingredients([recipe_line | remaining_lines], ingredients_list) do
     case recipe_line do
       "Ingredients:" ->
-        is_before_next_section?(remaining_lines)
+        is_before_next_section(remaining_lines)
 
       _ ->
         find_ingredients(remaining_lines, ingredients_list)
@@ -48,23 +48,23 @@ defmodule DisplayRecipe.CLI do
 
   def find_ingredients([], ingredients_list), do: ingredients_list
 
-  def is_before_next_section?(remaining_lines) do
-    is_before_next_section?(remaining_lines, [])
+  def is_before_next_section(remaining_lines) do
+    is_before_next_section(remaining_lines, [])
   end
 
-  def is_before_next_section?([recipe_line | remaining_lines], instruction_list) do
+  def is_before_next_section([recipe_line | remaining_lines], instruction_list) do
     print remaining_lines
     print recipe_line
     case recipe_line do
       "bab" ->
-        print ~s(#{recipe_line})
+        print ~s(I am bab: #{recipe_line})
 
       _ ->
-        print ~s(I am not recipes)
+        is_before_next_section(remaining_lines, instruction_list)
 
     end
   end
 
-end
+  def is_before_next_section([], instruction_list), do: instruction_list
 
-DisplayRecipe.CLI.main
+end
