@@ -1,19 +1,4 @@
 defmodule DisplayRecipe.CLI do
-<<<<<<< HEAD
-  use Application
-
-  def start(_type, _args) do
-    children = []
-    Supervisor.start_link(children, strategy: :one_for_one)
-  end
-
-  @outgoing_messages %{
-    :welcome_screen => "Welcome to Recipe Book!"
-  }
-
-  def main do
-    print(@outgoing_messages[:welcome_screen])
-=======
   @user_prompts %{
     :welcome_screen => "Welcome to Recipe Book!"
   }
@@ -24,7 +9,6 @@ defmodule DisplayRecipe.CLI do
 
   def main(_args) do
     print(@user_prompts[:welcome_screen])
->>>>>>> d903363... Add methods to print contents of read files
   end
 
   def print(text) do
