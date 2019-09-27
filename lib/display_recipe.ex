@@ -4,7 +4,7 @@ defmodule DisplayRecipe.CLI do
   }
 
   @recipe_files %{
-    :ice_cubes => "../recipes/ice_cubes.txt"
+    :ice_cubes => './recipes/ice_cubes.txt'
   }
 
   def main(_args) do
@@ -16,7 +16,7 @@ defmodule DisplayRecipe.CLI do
   end
 
   def read_file(filepath) do
-    File.read!(filepath)
+    File.read!(Path.expand(filepath))
   end
 
   def print_file_contents do
