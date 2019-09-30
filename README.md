@@ -18,4 +18,4 @@ A recipe app for the command line that takes a text file and returns a grocery l
 
 4. Call methods as you please!
 
-  ```DisplayRecipe.CLI.print_file_contents```
+  ```Controller.print_file_contents```

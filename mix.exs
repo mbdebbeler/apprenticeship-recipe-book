@@ -1,4 +1,4 @@
-defmodule DisplayRecipe.MixProject do
+defmodule Controller.MixProject do
   use Mix.Project
 
   def project do
@@ -7,7 +7,7 @@ defmodule DisplayRecipe.MixProject do
       version: "0.1.0",
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
-      escript: [main_module: DisplayRecipe.CLI],
+      escript: [main_module: Controller],
       deps: deps()
     ]
   end
