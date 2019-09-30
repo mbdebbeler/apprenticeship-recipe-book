@@ -1,23 +1,30 @@
 defmodule DisplayRecipe.CLI do
-  use Application
-
-  def start(_type, _args) do
-    children = []
-    Supervisor.start_link(children, strategy: :one_for_one)
-  end
-
-  @outgoing_messages %{
+  @user_prompts %{
     :welcome_screen => "Welcome to Recipe Book!"
   }
 
+  @recipe_files %{
+    :ice_cubes => Path.expand('./recipes/ice_cubes.txt')
+  }
+
   def main do
-    print(@outgoing_messages[:welcome_screen])
+    print(@user_prompts[:welcome_screen])
   end
 
   def print(text) do
     IO.puts(text)
-  end 
+  end
+
+  def read_file(filepath) do
+    File.read!(filepath)
+  end
+
+  def print_file_contents do
+    print(read_file(@recipe_files[:ice_cubes]))
+  end
+
+  def print_file_contents(filepath) do
+    print(read_file(filepath))
+  end
 
 end
-
-DisplayRecipe.CLI.main
