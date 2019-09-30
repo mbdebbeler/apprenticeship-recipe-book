@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mbdebbeler/apprenticeship-recipe-book.svg?branch=master)](https://travis-ci.org/mbdebbeler/apprenticeship-recipe-book)
+
 ## Description
 
 A recipe app for the command line that takes a text file and returns a grocery list.
