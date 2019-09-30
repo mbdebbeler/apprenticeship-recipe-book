@@ -62,4 +62,5 @@ defmodule DisplayRecipe.CLI do
     |> is_before_section_break
     |> Enum.each(fn x -> print("- " <> x) end)
   end
+
 end
