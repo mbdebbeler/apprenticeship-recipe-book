@@ -10,7 +10,7 @@ defmodule Controller do
     :ice_cubes => './recipes/ice_cubes.txt'
   }
 
-  def main(_args) do
+  def main do
     Formatter.print(@user_prompts[:welcome_screen])
   end
 

@@ -4,14 +4,14 @@ defmodule UserInterfaceTest do
   import UserInterface
 
   describe "get_input/3" do
-    test "using FakeIO module in TestHelper, accepts valid input 'j' and returns a capitalized string 'J'" do
-      output = fn -> get_input("Fake Prompt Message", FakeIO) |> IO.write() end
-      assert capture_io(output) == "J"
+    test "when passed valid IO input 'y', returns capitalized string 'Y'" do
+      output = fn -> get_input("Fake Prompt Message") |> IO.write() end
+      assert capture_io([input: "n", capture_prompt: false], output) == "N"
     end
 
-    test "user is prompted to try again if they enter an invalid response" do
-      output = fn -> get_input(nil, FakeIO) |> IO.write() end
-      assert capture_io(output) == "I am asking for your input, user.\n"
+    test "when passed invalid IO input nil, returns a string error message" do
+      output = fn -> get_input(nil, "Message", FakeIO) |> IO.write() end
+      assert capture_io(output) =~ "!"
     end
   end
 end

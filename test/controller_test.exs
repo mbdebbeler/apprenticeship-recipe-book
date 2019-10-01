@@ -4,6 +4,6 @@ defmodule ControllerTest do
   import Controller
 
   test "main prints a welcome message" do
-    assert capture_io(fn -> main("") end) == "Welcome to Recipe Book!\n"
+    assert capture_io(fn -> main() end) == "Welcome to Recipe Book!\n"
   end
 end

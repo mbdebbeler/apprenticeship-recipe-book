@@ -9,7 +9,7 @@ defmodule UserInterface do
   end
 
   def get_input(nil, _, io) do
-    get_input("I am asking for your input, user.\n", io)
+    get_input("I didn't understand that and I don't know what to do. Please enter a valid command.\n", io)
   end
 
   def get_input(message, _, _io) do
