@@ -16,4 +16,9 @@ defmodule UserInterface do
     String.capitalize(message)
   end
 
+  def display(message) do
+    message
+    |> IO.puts()
+  end
+
 end

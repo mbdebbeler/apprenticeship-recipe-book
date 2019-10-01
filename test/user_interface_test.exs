@@ -14,4 +14,14 @@ defmodule UserInterfaceTest do
       assert capture_io(output) =~ "!"
     end
   end
+
+  describe "display/1" do
+    test "(Caroline way) prints provided message to the console" do
+      example_message = "Foo Bar"
+      response = fn ->
+        assert example_message |> display() == :ok
+      end
+      assert capture_io(response) == example_message <> "\n"
+    end
+  end
 end
