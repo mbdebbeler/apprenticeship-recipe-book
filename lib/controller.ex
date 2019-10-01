@@ -1,16 +1,18 @@
 defmodule Controller do
-  require Formatter
-
-  @user_prompts %{
-    :welcome_screen => "Welcome to Recipe Book!",
-    :grocery_list => "Groceries for this recipe:"
-  }
-
-  @recipe_files %{
-    :ice_cubes => './recipes/ice_cubes.txt'
-  }
-
-  def main do
-    UserInterface.display(@user_prompts[:welcome_screen])
+  def main(_args) do
+    run(:welcome_screen)
   end
+
+  def run(prompt) when prompt != "Q" do
+    Messages.get_prompt(prompt)
+    |> UserInterface.get_input()
+    |> run()
+  end
+
+  def run("Q") do
+    :quit
+    |> Messages.get_prompt()
+    |> UserInterface.display()
+  end
+
 end
