@@ -1,5 +1,4 @@
 defmodule UserInterface do
-
   def get_input(message, io \\ IO) do
     message
     |> io.gets()
@@ -9,7 +8,10 @@ defmodule UserInterface do
   end
 
   def get_input(nil, _, io) do
-    get_input("I didn't understand that and I don't know what to do. Please enter a valid command.\n", io)
+    get_input(
+      "I didn't understand that and I don't know what to do. Please enter a valid command.\n",
+      io
+    )
   end
 
   def get_input(message, _, _io) do
@@ -20,5 +22,4 @@ defmodule UserInterface do
     message
     |> IO.puts()
   end
-
 end

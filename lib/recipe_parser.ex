@@ -1,5 +1,4 @@
 defmodule RecipeParser do
-
   def read_file(filepath) do
     File.read!(Path.expand(filepath))
   end
@@ -10,7 +9,6 @@ defmodule RecipeParser do
     |> split_file_by_lines
     |> is_after_ingredients
     |> is_before_section_break
-    |> Enum.each(fn x -> "- " <> x end)
   end
 
   def split_file_by_lines(recipe) do
@@ -38,5 +36,4 @@ defmodule RecipeParser do
     section_break_index = Enum.find_index(remaining_lines, fn x -> x == "" end)
     Enum.slice(remaining_lines, 0..(section_break_index - 1))
   end
-
 end

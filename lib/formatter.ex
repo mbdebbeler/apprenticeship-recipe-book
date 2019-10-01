@@ -1,12 +1,6 @@
 defmodule Formatter do
-
-  def print(text) do
-    IO.puts(text)
+  def bulleted_list(ingredients) do
+    ingredients
+    |> Enum.each(fn x -> "- " <> x end)
   end
-
-  def pretty_print_list(message, ingredients) do
-    print(message)
-    ingredients |> Enum.each (fn ingredient -> print(ingredient) end)
-  end
-
 end

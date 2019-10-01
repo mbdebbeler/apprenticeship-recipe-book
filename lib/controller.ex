@@ -11,7 +11,6 @@ defmodule Controller do
   }
 
   def main do
-    Formatter.print(@user_prompts[:welcome_screen])
+    UserInterface.display(@user_prompts[:welcome_screen])
   end
-
 end
