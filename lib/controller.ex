@@ -5,6 +5,9 @@ defmodule Controller do
 
   def run(prompt) when prompt != "Q" do
     Messages.get_prompt(prompt)
+    |> UserInterface.display()
+
+    Messages.get_prompt(:menu)
     |> UserInterface.get_input()
     |> run()
   end
