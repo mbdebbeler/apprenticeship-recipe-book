@@ -10,4 +10,10 @@ defmodule ControllerTest do
     end
   end
 
+  describe "execute_command/1" do
+    test "when passed a string that's found in Messages, prints a list of viewable recipes" do
+      assert execute_command(:V) == :ok
+    end
+  end
+
 end

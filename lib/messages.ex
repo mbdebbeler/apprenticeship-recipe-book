@@ -4,6 +4,7 @@ defmodule Messages do
       :R => "You typed R",
       :K => "You typed K",
       :D => "You typed D",
+      :V => "View recipes",
       :welcome_screen => "Welcome to Recipe Book!\n\n\n",
       :menu => "What would you like to do?\n\n\nV = View a Recipe\nG = Generate a Grocery List\nQ = Quit\n",
       :grocery_list_header => "Groceries for this recipe:",

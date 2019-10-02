@@ -18,4 +18,16 @@ defmodule Controller do
     |> UserInterface.display()
   end
 
+  def execute_command(input) do
+    case input do
+      :V ->
+        Messages.get_prompt(input)
+        |> UserInterface.display()
+
+      _ ->
+        false
+    end
+
+  end
+
 end
