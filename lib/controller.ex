@@ -1,10 +1,11 @@
 defmodule Controller do
+
   def main(_args) do
     run(:welcome_screen)
   end
 
   def run(prompt) when prompt != "Q" do
-    Messages.get_prompt(prompt)
+    parse_input(prompt)
     |> UserInterface.display()
 
     Messages.get_prompt(:menu)
@@ -13,21 +14,38 @@ defmodule Controller do
   end
 
   def run("Q") do
-    :quit
-    |> Messages.get_prompt()
+    parse_input("Q")
     |> UserInterface.display()
+  end
+
+  def parse_input(input) do
+    if Enum.member?(["G", "V", "I", "Q", :welcome_screen], input) do
+        Messages.get_prompt(input)
+        execute_command(input)
+    else
+        Messages.get_prompt(:unknown)
+    end
   end
 
   def execute_command(input) do
     case input do
-      :V ->
+      "G" ->
+        Messages.get_recipe(:ice_cubes)
+        |> RecipeParser.parse_grocery_list()
+
+      "V" ->
+        Messages.get_recipe(:all)
+
+      "I" ->
+        Messages.get_recipe(:ice_cubes)
+        |> RecipeParser.read_file()
+
+      "Q" ->
         Messages.get_prompt(input)
-        |> UserInterface.display()
 
       _ ->
-        false
+        Messages.get_prompt(input)
     end
-
   end
 
 end
