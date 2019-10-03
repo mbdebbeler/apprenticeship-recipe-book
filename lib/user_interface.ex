@@ -22,4 +22,8 @@ defmodule UserInterface do
     message
     |> IO.puts()
   end
+
+  def line_break(_args) do
+    display("\n")
+  end
 end

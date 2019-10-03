@@ -5,7 +5,6 @@ defmodule Controller do
 
   def run(prompt) when prompt != "Q" do
     parse_input(prompt)
-    |> UserInterface.display()
 
     Messages.get_prompt(:menu)
     |> UserInterface.get_input()
@@ -20,6 +19,8 @@ defmodule Controller do
   def parse_input(input) do
     if Enum.member?(["G", "V", "I", "Q", :welcome_screen], input) do
       Messages.get_prompt(input)
+      |> UserInterface.display()
+      |> UserInterface.line_break
       execute_command(input)
     else
       Messages.get_prompt(:unknown)

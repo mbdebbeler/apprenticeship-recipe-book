@@ -26,4 +26,15 @@ defmodule UserInterfaceTest do
       assert capture_io(response) == example_message <> "\n"
     end
   end
+
+  describe "line_break/1" do
+    test "adds two newlines" do
+
+      line_break = fn ->
+        assert line_break(:ok) == :ok
+      end
+
+      assert capture_io(line_break) == "\n\n"
+    end
+  end
 end
