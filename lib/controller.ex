@@ -1,5 +1,4 @@
 defmodule Controller do
-
   def main(_args) do
     run(:welcome_screen)
   end
@@ -20,10 +19,10 @@ defmodule Controller do
 
   def parse_input(input) do
     if Enum.member?(["G", "V", "I", "Q", :welcome_screen], input) do
-        Messages.get_prompt(input)
-        execute_command(input)
+      Messages.get_prompt(input)
+      execute_command(input)
     else
-        Messages.get_prompt(:unknown)
+      Messages.get_prompt(:unknown)
     end
   end
 
@@ -47,5 +46,4 @@ defmodule Controller do
         Messages.get_prompt(input)
     end
   end
-
 end

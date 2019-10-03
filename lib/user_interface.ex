@@ -22,5 +22,4 @@ defmodule UserInterface do
     message
     |> IO.puts()
   end
-
 end

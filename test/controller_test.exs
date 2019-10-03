@@ -12,5 +12,4 @@ defmodule ControllerTest do
       assert parse_input("Q") == "Goodbye!"
     end
   end
-
 end
