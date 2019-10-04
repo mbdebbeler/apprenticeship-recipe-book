@@ -1,4 +1,6 @@
 defmodule RecipeParser do
+  def read_file(nil), do: Messages.get_prompt(:not_found)
+
   def read_file(filepath) do
     File.read!(Path.expand(filepath))
   end
