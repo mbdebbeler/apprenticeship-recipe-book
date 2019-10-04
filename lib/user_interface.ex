@@ -23,7 +23,12 @@ defmodule UserInterface do
     |> IO.puts()
   end
 
-  def line_break(_args) do
+  def line_break() do
     display("\n")
+  end
+
+  def clear_screen() do
+    IO.write(IO.ANSI.home())
+    IO.write(IO.ANSI.clear())
   end
 end

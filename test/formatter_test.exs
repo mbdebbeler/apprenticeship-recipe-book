@@ -10,11 +10,11 @@ defmodule FormatterTest do
       ]
 
       expected_output = [
-        "- 2 cups water (approximately)",
-        "- 2 tablespoons water (additional if needed)"
+        "- 2 cups water (approximately)\n",
+        "- 2 tablespoons water (additional if needed)\n"
       ]
 
-      assert(fn -> bulleted_list(example_ingredients) == :ok end) == expected_output
+      assert bulleted_list(example_ingredients) == expected_output
     end
   end
 end
