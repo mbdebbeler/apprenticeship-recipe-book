@@ -6,13 +6,13 @@ defmodule ControllerTest do
   describe "parse_input/1" do
     test "when passed a character on the menu, does not error" do
       output = fn -> parse_input("V") end
-      assert capture_io(output) == "Which recipe would you like to view?\n- Ice Cubes\n\n"
+      assert capture_io(output) == "Which recipe would you like to view?\n1) Ice Cubes\n\n"
     end
   end
 
   describe "execute_command/1" do
     test "when passed 'V', prints a list of viewable recipes files" do
-      view_recipe_list = "- Ice Cubes\n\n"
+      view_recipe_list = "1) Ice Cubes\n\n"
       output = fn -> execute_command("V") end
       assert capture_io(output) == view_recipe_list
     end
