@@ -8,7 +8,9 @@ defmodule Messages do
       "Q" => "Goodbye!",
       :unknown =>
         "I didn't understand that and I don't know what to do. Please enter a valid command.",
-      "L" => "*** Enter 'G' to generate a grocery list for this recipe! ***"
+      "L" => "*** Enter 'G' to generate a grocery list for this recipe! ***",
+      :not_found =>
+       "We either don't have that recipe or I can't find it. \n:(. \nPlease choose another recipe."
     }
 
     messages[prompt]
@@ -16,6 +18,7 @@ defmodule Messages do
 
   def get_recipe(name) when name != :all do
     recipes = %{
+      "1" => './recipes/ice_cubes.txt',
       :ice_cubes => './recipes/ice_cubes.txt'
     }
 
@@ -24,9 +27,9 @@ defmodule Messages do
 
   def get_recipe(:all) do
     recipes = %{
-      "Ice Cubes" => './recipes/ice_cubes.txt'
+      "1" => "Ice Cubes"
     }
 
-    Map.keys(recipes)
+    Map.values(recipes)
   end
 end
