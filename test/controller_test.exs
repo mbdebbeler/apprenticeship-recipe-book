@@ -26,7 +26,7 @@ defmodule ControllerTest do
 
     test "when passed a non-integer string not on the menu, prints a a generic error message" do
       error_prompt =
-        "\nI didn't understand that and I don't know what to do. Please enter a valid command.\n\n\n"
+        "\n\n\nI didn't understand that and I don't know what to do. Please enter a valid command.\n\n\n"
 
       output = fn -> execute_command("R") end
       assert capture_io(output) == error_prompt
