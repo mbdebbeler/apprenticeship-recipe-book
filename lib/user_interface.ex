@@ -1,20 +1,18 @@
 defmodule UserInterface do
-  def get_input(message, io \\ IO) do
-    message
+  def get_input(state, message, io \\ IO) do
+    input = message
     |> io.gets()
     |> String.trim()
     |> String.first()
-    |> get_input(message, io)
+    |> sanitize_input(message, io)
+    %{state | input: input}
   end
 
-  def get_input(nil, _, io) do
-    get_input(
-      "I didn't understand that and I don't know what to do. Please enter a valid command.",
-      io
-    )
+  def sanitize_input(nil, _, _io) do
+    "!"
   end
 
-  def get_input(message, _, _io) do
+  def sanitize_input(message, _, _io) do
     String.capitalize(message)
   end
 
@@ -23,12 +21,19 @@ defmodule UserInterface do
     |> IO.puts()
   end
 
+  def display(state, message) do
+    message
+    |> IO.puts()
+    state
+  end
+
   def line_break() do
     display("\n")
   end
 
-  def clear_screen() do
+  def clear_screen(state) do
     IO.write(IO.ANSI.home())
     IO.write(IO.ANSI.clear())
+    state
   end
 end

@@ -1,62 +1,83 @@
 defmodule Controller do
   def main(_args) do
-    run(:welcome_screen)
-  end
+    welcome_user()
 
-  def run("Q") do
-    UserInterface.clear_screen()
-    UserInterface.line_break()
-    execute_command("Q")
-  end
-
-  def run(prompt) do
-    UserInterface.clear_screen()
-    execute_command(prompt)
-    UserInterface.line_break()
-
-    Messages.get_prompt(:menu)
-    |> UserInterface.get_input()
+    UserInterface.get_input(%{input: nil, view: :welcome}, Messages.get_prompt(:welcome))
     |> run()
   end
 
-  def execute_command(input) do
+  def run(%{input: "Q"} = state) do
+    state
+    |> UserInterface.clear_screen()
+    |> execute_command()
+  end
+
+  def run(%{view: view} = state) do
+    state
+    |> UserInterface.clear_screen()
+    |> execute_command()
+    |> UserInterface.display(Messages.get_menu(view))
+    |> UserInterface.get_input(Messages.get_prompt(view))
+    |> run()
+  end
+
+  def execute_command(%{input: input} = state) do
     Messages.get_prompt(input)
     |> UserInterface.display()
 
+    case Integer.parse(input) do
+      :error ->
+        parse_input(input)
+
+      _ ->
+        fetch_content(input)
+    end
+
+    state
+  end
+
+  def parse_input(input) do
     case input do
-      :welcome_screen ->
+      "G" ->
+        generate_grocery_list()
+
+      "I" ->
+        generate_index()
+
+      "Q" ->
         nil
 
       _ ->
-        case Integer.parse(input) do
-          :error ->
-            case input do
-              "G" ->
-                Messages.get_recipe(:ice_cubes)
-                |> RecipeParser.parse_grocery_list()
-                |> Formatter.bulleted_list()
-                |> UserInterface.display()
-
-              "V" ->
-                Messages.get_recipe(:all)
-                |> Formatter.numbered_list()
-                |> UserInterface.display()
-
-              "Q" ->
-                UserInterface.line_break()
-
-              _ ->
-                UserInterface.line_break()
-                Messages.get_prompt(:unknown)
-                |> UserInterface.display()
-                UserInterface.line_break()
-            end
-
-          _ ->
-            Messages.get_recipe(input)
-            |> RecipeParser.read_file()
-            |> UserInterface.display()
-        end
+        unknown_error()
     end
+  end
+
+  def welcome_user() do
+    Messages.get_prompt(:welcome)
+    |> UserInterface.display()
+  end
+
+  def generate_grocery_list() do
+    Messages.get_recipe(:ice_cubes)
+    |> RecipeParser.parse_grocery_list()
+    |> Formatter.bulleted_list()
+    |> UserInterface.display()
+  end
+
+  def generate_index() do
+    Messages.get_recipe(:all)
+    |> Formatter.numbered_list()
+    |> UserInterface.display()
+  end
+
+  def unknown_error() do
+    Messages.get_prompt(:unknown)
+    |> UserInterface.display()
+  end
+
+  def fetch_content(input) do
+    Messages.get_recipe(input)
+    |> RecipeParser.read_file()
+    |> UserInterface.display()
   end
 end
