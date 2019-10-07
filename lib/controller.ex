@@ -3,9 +3,15 @@ defmodule Controller do
     run(:welcome_screen)
   end
 
-  def run(prompt) when prompt != "Q" do
+  def run("Q") do
     UserInterface.clear_screen()
-    parse_input(prompt)
+    UserInterface.line_break()
+    execute_command("Q")
+  end
+
+  def run(prompt) do
+    UserInterface.clear_screen()
+    execute_command(prompt)
     UserInterface.line_break()
 
     Messages.get_prompt(:menu)
@@ -13,18 +19,10 @@ defmodule Controller do
     |> run()
   end
 
-  def run("Q") do
-    execute_command("Q")
-  end
-
-  def parse_input(input) do
+  def execute_command(input) do
     Messages.get_prompt(input)
     |> UserInterface.display()
 
-    execute_command(input)
-  end
-
-  def execute_command(input) do
     case input do
       :welcome_screen ->
         nil
@@ -45,18 +43,12 @@ defmodule Controller do
                 |> UserInterface.display()
 
               "Q" ->
-                UserInterface.clear_screen()
-                UserInterface.line_break()
-
-                Messages.get_prompt(input)
-                |> UserInterface.display()
-
                 UserInterface.line_break()
 
               _ ->
+                UserInterface.line_break()
                 Messages.get_prompt(:unknown)
                 |> UserInterface.display()
-
                 UserInterface.line_break()
             end
 
