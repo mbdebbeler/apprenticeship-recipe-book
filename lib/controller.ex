@@ -1,6 +1,6 @@
 defmodule Controller do
   def main(_args) do
-    run(:welcome_screen)
+    run(:welcome)
   end
 
   def run("Q") do
@@ -19,12 +19,26 @@ defmodule Controller do
     |> run()
   end
 
+  def new_main(_args) do
+    screen = Screen.build()
+    new_run(screen)
+  end
+
+  def new_run(screen) do
+    UserInterface.get_input(screen.prompt)
+    |> update_screen(screen)
+  end
+
+  def update_screen(input, screen) do
+    Screen.build(input, screen)
+  end
+
   def execute_command(input) do
     Messages.get_prompt(input)
     |> UserInterface.display()
 
     case input do
-      :welcome_screen ->
+      :welcome ->
         nil
 
       _ ->
@@ -47,8 +61,10 @@ defmodule Controller do
 
               _ ->
                 UserInterface.line_break()
+
                 Messages.get_prompt(:unknown)
                 |> UserInterface.display()
+
                 UserInterface.line_break()
             end
 

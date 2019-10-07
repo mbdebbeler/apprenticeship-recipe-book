@@ -3,6 +3,26 @@ defmodule ControllerTest do
   import Controller
   import ExUnit.CaptureIO
 
+  describe "update_screen/1" do
+    test "takes a struct and returns a struct" do
+      blank_screen = %Screen{
+        current_view: nil,
+        prompt: nil,
+        user_input: nil,
+        menu: nil
+      }
+
+      welcome_screen = %Screen{
+        current_view: :welcome,
+        prompt: nil,
+        user_input: "V",
+        menu: nil
+      }
+
+      assert update_screen("V", blank_screen) == welcome_screen
+    end
+  end
+
   describe "execute_command/1" do
     test "when passed 'V', prints a list of viewable recipes files" do
       view_recipe_list = "Which recipe would you like to view?\n1) Ice Cubes\n\n"
@@ -49,7 +69,7 @@ defmodule ControllerTest do
     end
 
     test "when passed :welcome_screen, prints a welcome message." do
-      output = fn -> execute_command(:welcome_screen) end
+      output = fn -> execute_command(:welcome) end
       assert capture_io(output) == "Welcome to Recipe Book!\n"
     end
   end

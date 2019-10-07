@@ -7,7 +7,7 @@ defmodule UserInterface do
     |> get_input(message, io)
   end
 
-  def get_input(nil, _, io) do
+  def get_input(nil, _, _io) do
     "!"
   end
 
