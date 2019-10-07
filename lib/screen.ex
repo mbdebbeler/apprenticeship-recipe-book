@@ -15,8 +15,8 @@ defmodule Screen do
 
   def build(user_input, _screen) do
     %Screen{
-      current_view: :welcome,
-      user_input: user_input
+      user_input: user_input,
+      prompt: Messages.get_prompt(user_input)
     }
   end
 end

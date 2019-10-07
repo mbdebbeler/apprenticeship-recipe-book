@@ -13,8 +13,8 @@ defmodule ControllerTest do
       }
 
       welcome_screen = %Screen{
-        current_view: :welcome,
-        prompt: nil,
+        current_view: nil,
+        prompt: "Which recipe would you like to view?",
         user_input: "V",
         menu: nil
       }

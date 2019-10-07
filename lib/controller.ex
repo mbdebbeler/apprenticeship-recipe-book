@@ -26,7 +26,9 @@ defmodule Controller do
 
   def new_run(screen) do
     UserInterface.get_input(screen.prompt)
+    |> UserInterface.display
     |> update_screen(screen)
+    |> new_run()
   end
 
   def update_screen(input, screen) do
