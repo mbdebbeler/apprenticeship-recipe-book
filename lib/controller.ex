@@ -2,18 +2,18 @@ defmodule Controller do
   def main(_args) do
     welcome_user()
 
-    UserInterface.get_input(%{input: nil, view: :welcome}, Messages.get_prompt(:welcome))
+    UserInterface.get_input(%{input: nil, view: :welcome, io: IO}, Messages.get_prompt(:welcome))
     |> run()
   end
 
-  def run(%{input: "Q"} = state) do
-    state
+  def run(%{input: "Q"} = context) do
+    context
     |> UserInterface.clear_screen()
     |> execute_command()
   end
 
-  def run(%{view: view} = state) do
-    state
+  def run(%{view: view} = context) do
+    context
     |> UserInterface.clear_screen()
     |> execute_command()
     |> UserInterface.display(Messages.get_menu(view))
@@ -21,7 +21,7 @@ defmodule Controller do
     |> run()
   end
 
-  def execute_command(%{input: input} = state) do
+  def execute_command(%{input: input} = context) do
     Messages.get_prompt(input)
     |> UserInterface.display()
 
@@ -33,7 +33,7 @@ defmodule Controller do
         fetch_content(input)
     end
 
-    state
+    context
   end
 
   def parse_input(input) do
