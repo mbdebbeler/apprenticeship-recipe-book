@@ -1,17 +1,18 @@
 defmodule UserInterface do
-  def get_input(message, io \\ IO) do
-    message
+  def get_input(%{prompt: prompt, io: io} = context) do
+    prompt
     |> io.gets()
     |> String.trim()
     |> String.first()
-    |> get_input(message, io)
+    |> sanitize_input(io)
+    |> (fn input -> Map.put(context, :input, input) end).()
   end
 
-  def get_input(nil, _, _io) do
+  def sanitize_input(nil, _io) do
     "!"
   end
 
-  def get_input(message, _, _io) do
+  def sanitize_input(message, _io) do
     String.capitalize(message)
   end
 
@@ -20,12 +21,20 @@ defmodule UserInterface do
     |> IO.puts()
   end
 
+  def display(%{io: io} = context, message) do
+    message
+    |> io.puts()
+
+    context
+  end
+
   def line_break() do
     display("\n")
   end
 
-  def clear_screen() do
+  def clear_screen(context) do
     IO.write(IO.ANSI.home())
     IO.write(IO.ANSI.clear())
+    context
   end
 end

@@ -23,7 +23,7 @@ erl_crash.dump
 recipe_book-*.tar
 
 # Ignore recipe_book binary
-/recipe_book
+/.recipe_book
 
 # Ignore Travis yml file
 .travis.yml
