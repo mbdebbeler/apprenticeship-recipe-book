@@ -11,6 +11,7 @@ defmodule Controller do
       error: nil
     }
     |> run()
+
   end
 
   def run(%{input: "Q"} = context) do
@@ -40,6 +41,7 @@ defmodule Controller do
   def update_prompt(%{view: view} = context) do
     %{context | prompt: Messages.get_prompt(view)}
   end
+
 
   def update_header(%{view: view} = context) do
     %{context | header: Messages.get_header(view)}
@@ -126,6 +128,7 @@ defmodule Controller do
 
           "Q" ->
             nil
+
 
           _ ->
             error = Messages.get_prompt(:unknown)

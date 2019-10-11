@@ -18,6 +18,7 @@ defmodule Messages do
       :index => "Which recipe would you like to view? Type the number and press enter.\n",
       :unknown =>
         "I didn't understand that and I don't know what to do. Please enter a valid command.\n"
+
     }
 
     messages[prompt]

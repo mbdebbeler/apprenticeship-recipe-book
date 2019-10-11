@@ -116,6 +116,7 @@ defmodule ControllerTest do
         error: nil
       }
 
+
       assert nil == fetch_content(example_context)
     end
 
@@ -243,6 +244,7 @@ defmodule ControllerTest do
 
       assert %{error: nil} != fetch_content(example_context)
       assert %{view: :grocery_list} = fetch_content(example_context)
+
     end
   end
 end
