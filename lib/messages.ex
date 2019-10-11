@@ -18,9 +18,8 @@ defmodule Messages do
 
   def get_menu(view) do
     messages = %{
-      :main => "Menu Options:\nI = View Recipe Index\nQ = Quit\n\n",
-      :index =>
-        "Menu Options:\n(1-9) = View a Specific Recipe\nI = Return to Recipe Index\nQ = Quit\n\n",
+      :welcome => "Menu Options:\nI = View Recipe Index\nQ = Quit\n\n",
+      :index => "Menu Options:\n(1-9) = View a Specific Recipe\nQ = Quit\n\n",
       :view_recipe =>
         "Menu Options:\nG = Generate a Grocery List for this Recipt\nI = Return to Recipe Index\nQ = Quit\n\n",
       :grocery_list => "Menu Options:\nI = Return to Recipe Index\nQ = Quit\n\n"

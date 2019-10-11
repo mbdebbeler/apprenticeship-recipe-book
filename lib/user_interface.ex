@@ -5,8 +5,7 @@ defmodule UserInterface do
     |> String.trim()
     |> String.first()
     |> sanitize_input(io)
-    |> fn input -> Map.put(context, :input, input) end.()
-    # %{context | input: input}
+    |> (fn input -> Map.put(context, :input, input) end).()
   end
 
   def sanitize_input(nil, _io) do
@@ -22,9 +21,10 @@ defmodule UserInterface do
     |> IO.puts()
   end
 
-  def display(context, message) do
+  def display(%{io: io} = context, message) do
     message
-    |> IO.puts()
+    |> io.puts()
+
     context
   end
 

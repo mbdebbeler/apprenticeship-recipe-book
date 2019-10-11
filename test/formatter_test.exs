@@ -31,4 +31,35 @@ defmodule FormatterTest do
       assert numbered_list(example_ingredients) == expected_output
     end
   end
+
+  describe "print menu" do
+    test "takes a context map, returns an unchanged context map" do
+      example_context = %{
+        input: :welcome,
+        content: nil,
+        view: :welcome,
+        io: IO,
+        prompt: Messages.get_prompt(:view),
+        menu: Messages.get_menu(:view)
+      }
+
+      assert print_menu(example_context) == example_context
+    end
+  end
+
+  describe "print content" do
+    test "takes a context map, returns an unchanged context map" do
+      example_context = %{
+        input: :welcome,
+        content: nil,
+        view: :welcome,
+        io: IO,
+        prompt: Messages.get_prompt(:view),
+        menu: Messages.get_menu(:view)
+      }
+
+      assert print_content(example_context) == example_context
+    end
+  end
+
 end
