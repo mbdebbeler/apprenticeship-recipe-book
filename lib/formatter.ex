@@ -9,6 +9,20 @@ defmodule Formatter do
     |> Enum.map(fn x -> "1) " <> x <> "\n" end)
   end
 
+  def print_screen(context) do
+    context
+    |> print_header()
+    |> print_content()
+    |> print_menu()
+  end
+
+  def print_header(%{header: header} = context) do
+    header
+    |> UserInterface.display()
+
+    context
+  end
+
   def print_menu(%{menu: menu} = context) do
     menu
     |> UserInterface.display()
@@ -16,8 +30,10 @@ defmodule Formatter do
     context
   end
 
-  def print_content(context) do
+  def print_content(%{content: content} = context) do
+    content
+    |> UserInterface.display()
+
     context
   end
-
 end

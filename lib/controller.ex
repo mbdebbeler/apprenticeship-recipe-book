@@ -1,114 +1,135 @@
 defmodule Controller do
   def main(_args) do
-    welcome_user()
-      %{
-        input: :welcome,
-        content: nil,
-        view: :welcome,
-        io: IO,
-        prompt: Messages.get_prompt(:view),
-        menu: Messages.get_menu(:view)
-      }
-      |> run()
+    %{
+      input: :welcome,
+      header: nil,
+      content: nil,
+      view: :welcome,
+      io: IO,
+      prompt: nil,
+      menu: nil
+    }
+    |> run()
   end
 
   def run(%{input: "Q"} = context) do
     context
     |> UserInterface.clear_screen()
-    |> execute_command()
+    UserInterface.display("Goodbye!\n")
   end
 
   def run(context) do
     context
-    # |> update_context()
     |> UserInterface.clear_screen()
-    |> Formatter.print_content()
-    |> Formatter.print_menu()
+    |> update_context()
+    |> Formatter.print_screen()
     |> UserInterface.get_input()
-    |> execute_command()
     |> run()
   end
 
-  # def update_context(context) do
-  #   context
-  #   %{context | prompt: Messages.get_prompt(:input)}
-  #   %{context | menu: Messages.get_menu(:view)}
-  #   context
-  # end
-
-  def execute_command(%{input: input} = context) do
-    Messages.get_prompt(input)
-    |> UserInterface.display()
-
-    case Integer.parse(input) do
-      :error ->
-        parse_input(context)
-
-      _ ->
-        fetch_content(context)
-    end
-  end
-
-  def parse_input(context) do
-    case context.input do
-      "G" ->
-        generate_grocery_list(context)
-
-      "I" ->
-        generate_index(context)
-
-      "Q" ->
-        context
-
-      _ ->
-        unknown_error(context)
-    end
-  end
-
-  def welcome_user() do
-    Messages.get_prompt(:welcome)
-    |> UserInterface.display()
-  end
-
-  def generate_grocery_list(%{content: content} = context) do
-    Messages.get_recipe(content)
-    |> RecipeParser.parse_grocery_list()
-    |> Formatter.bulleted_list()
-    |> UserInterface.display()
-
-    %{context | view: :grocery_list}
-    |> Formatter.print_menu()
-  end
-
-  def generate_index(context) do
-    %{context | view: :index}
-    |> Formatter.print_content()
-    |> Formatter.print_menu()
-
-    Messages.get_recipe(:all)
-    |> Formatter.numbered_list()
-    |> UserInterface.display()
-
-    %{context | view: :index}
-  end
-
-  def unknown_error(context) do
-    Messages.get_prompt(:unknown)
-    |> UserInterface.display()
-
+  def update_context(context) do
     context
+    |> update_content()
+    |> update_header()
+    |> update_menu()
+    |> update_prompt()
   end
 
-  def fetch_content(%{input: input} = context) do
-    if content = Messages.get_recipe(input) do
-      content
-      |> RecipeParser.read_file()
-      |> UserInterface.display()
+  def update_prompt(%{view: view} = context) do
+    %{context | prompt: Messages.get_prompt(view)}
+  end
 
-      %{context | content: input, view: :recipe}
-    else
-      UserInterface.display(Messages.get_prompt(:not_found))
-      context
+  def update_header(%{view: view} = context) do
+    %{context | header: Messages.get_header(view)}
+  end
+
+  def update_menu(%{view: view} = context) do
+    %{context | menu: Messages.get_menu(view)}
+  end
+
+  def update_content(context) do
+    context
+    |> fetch_content()
+  end
+
+  def fetch_content(%{input: input, view: view} = context) do
+    case view do
+      :welcome ->
+        case input do
+          "I" ->
+            recipe_list = Messages.get_recipe(:all) |> Formatter.numbered_list()
+            %{context | content: recipe_list, view: :index}
+
+          "Q" ->
+            nil
+
+          :welcome ->
+            context
+
+          _ ->
+            error = Messages.get_prompt(:unknown)
+            %{context | content: error}
+        end
+
+      :index ->
+        case input do
+          "Q" ->
+            nil
+          _ ->
+            if Messages.get_recipe(input) do
+              recipe =
+                Messages.get_recipe(input)
+                |> RecipeParser.read_file()
+                %{context | content: recipe, view: :view_recipe}
+              else
+                error = Messages.get_recipe(:not_found)
+                %{context | content: error}
+              end
+        end
+
+      :view_recipe ->
+        case input do
+          "G" ->
+            if Messages.get_recipe("1") do
+              grocery_list =
+                Messages.get_recipe("1")
+                |> RecipeParser.parse_grocery_list()
+                |> Formatter.bulleted_list()
+
+              %{context | content: grocery_list, view: :grocery_list}
+            else
+              error = Messages.get_recipe(:not_found)
+              %{context | content: error}
+            end
+
+          "I" ->
+            content = Messages.get_recipe(:all) |> Formatter.numbered_list()
+            %{context | content: content, view: :index}
+
+          "Q" ->
+            nil
+
+          _ ->
+            error = Messages.get_prompt(:unknown)
+            %{context | content: error}
+        end
+
+      :grocery_list ->
+        case input do
+          "I" ->
+            content = Messages.get_recipe(:all) |> Formatter.numbered_list()
+            %{context | content: content, view: :index}
+
+          "Q" ->
+            nil
+
+          _ ->
+            error = Messages.get_prompt(:unknown)
+            %{context | content: error}
+        end
+
+      _ ->
+        context
     end
   end
 end

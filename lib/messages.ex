@@ -1,16 +1,23 @@
 defmodule Messages do
+  def get_header(view) do
+    messages = %{
+      :welcome => "Welcome to Recipe Book!",
+      :index => "Recipe Index:",
+      :view_recipe => "Your Recipe:\n",
+      :grocery_list => "Groceries for this recipe:",
+      "Q" => "Goodbye!",
+    }
+
+    messages[view]
+  end
+
   def get_prompt(prompt) do
     messages = %{
-      "I" => "Which recipe would you like to view?",
-      :welcome => "Welcome to Recipe Book!",
-      :menu => "Menu Options:\nV = View a Recipe\nQ = Quit\n\n",
-      "G" => "Groceries for this recipe:",
-      "Q" => "Goodbye!",
+      "I" => "Which recipe would you like to view? Type the number and press enter.",
+      :welcome => "What would you like to do?",
+      :index => "Which recipe would you like to view? Type the number and press enter.",
       :unknown =>
         "I didn't understand that and I don't know what to do. Please enter a valid command.",
-      "L" => "*** Enter 'G' to generate a grocery list for this recipe! ***",
-      :not_found =>
-        "We either don't have that recipe or I can't find it. \n:(. \nPlease choose another recipe."
     }
 
     messages[prompt]
@@ -19,9 +26,9 @@ defmodule Messages do
   def get_menu(view) do
     messages = %{
       :welcome => "Menu Options:\nI = View Recipe Index\nQ = Quit\n\n",
-      :index => "Menu Options:\n(1-9) = View a Specific Recipe\nQ = Quit\n\n",
+      :index => "Menu Options:\n# = View a Specific Recipe\nQ = Quit\n\n",
       :view_recipe =>
-        "Menu Options:\nG = Generate a Grocery List for this Recipt\nI = Return to Recipe Index\nQ = Quit\n\n",
+        "Menu Options:\nG = Generate a Grocery List for this Recipe\nI = Return to Recipe Index\nQ = Quit\n\n",
       :grocery_list => "Menu Options:\nI = Return to Recipe Index\nQ = Quit\n\n"
     }
 
@@ -31,7 +38,8 @@ defmodule Messages do
   def get_recipe(name) when name != :all do
     recipes = %{
       "1" => './recipes/ice_cubes.txt',
-      :ice_cubes => './recipes/ice_cubes.txt'
+      :ice_cubes => './recipes/ice_cubes.txt',
+      :not_found => "We either don't have that recipe or I can't find it. \n:(. Please choose another recipe."
     }
 
     recipes[name]
