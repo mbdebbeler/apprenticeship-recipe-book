@@ -1,11 +1,11 @@
 defmodule Messages do
   def get_header(view) do
     messages = %{
-      :welcome => "Welcome to Recipe Book!",
+      :welcome => "Welcome to Recipe Book!\n",
       :index => "Recipe Index:",
-      :view_recipe => "Your Recipe:\n",
+      :view_recipe => "Your Recipe:",
       :grocery_list => "Groceries for this recipe:",
-      "Q" => "Goodbye!",
+      "Q" => "Goodbye!"
     }
 
     messages[view]
@@ -13,11 +13,11 @@ defmodule Messages do
 
   def get_prompt(prompt) do
     messages = %{
-      "I" => "Which recipe would you like to view? Type the number and press enter.",
-      :welcome => "What would you like to do?",
-      :index => "Which recipe would you like to view? Type the number and press enter.",
+      "I" => "Which recipe would you like to view? Type the number and press enter.\n",
+      :welcome => "What would you like to do?\n",
+      :index => "Which recipe would you like to view? Type the number and press enter.\n",
       :unknown =>
-        "I didn't understand that and I don't know what to do. Please enter a valid command.",
+        "I didn't understand that and I don't know what to do. Please enter a valid command.\n"
     }
 
     messages[prompt]
@@ -39,7 +39,8 @@ defmodule Messages do
     recipes = %{
       "1" => './recipes/ice_cubes.txt',
       :ice_cubes => './recipes/ice_cubes.txt',
-      :not_found => "We either don't have that recipe or I can't find it. \n:(. Please choose another recipe."
+      :not_found =>
+        "We either don't have that recipe or I can't find it. \n:(. Please choose another recipe.\n"
     }
 
     recipes[name]

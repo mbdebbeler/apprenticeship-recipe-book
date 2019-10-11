@@ -41,7 +41,8 @@ defmodule FormatterTest do
         view: :welcome,
         io: IO,
         prompt: nil,
-        menu: nil
+        menu: nil,
+        error: nil
       }
 
       assert print_screen(example_context) == example_context
@@ -57,7 +58,8 @@ defmodule FormatterTest do
         view: :welcome,
         io: IO,
         prompt: nil,
-        menu: nil
+        menu: nil,
+        error: nil
       }
 
       assert print_header(example_context) == example_context
@@ -73,7 +75,8 @@ defmodule FormatterTest do
         view: :welcome,
         io: IO,
         prompt: nil,
-        menu: nil
+        menu: nil,
+        error: nil
       }
 
       assert print_menu(example_context) == example_context
@@ -89,7 +92,8 @@ defmodule FormatterTest do
         view: :welcome,
         io: IO,
         prompt: nil,
-        menu: nil
+        menu: nil,
+        error: nil
       }
 
       assert print_content(example_context) == example_context

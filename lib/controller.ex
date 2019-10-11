@@ -7,7 +7,8 @@ defmodule Controller do
       view: :welcome,
       io: IO,
       prompt: nil,
-      menu: nil
+      menu: nil,
+      error: nil
     }
     |> run()
   end
@@ -15,6 +16,7 @@ defmodule Controller do
   def run(%{input: "Q"} = context) do
     context
     |> UserInterface.clear_screen()
+
     UserInterface.display("Goodbye!\n")
   end
 
@@ -68,23 +70,25 @@ defmodule Controller do
 
           _ ->
             error = Messages.get_prompt(:unknown)
-            %{context | content: error}
+            %{context | error: error}
         end
 
       :index ->
         case input do
           "Q" ->
             nil
+
           _ ->
             if Messages.get_recipe(input) do
               recipe =
                 Messages.get_recipe(input)
                 |> RecipeParser.read_file()
-                %{context | content: recipe, view: :view_recipe}
-              else
-                error = Messages.get_recipe(:not_found)
-                %{context | content: error}
-              end
+
+              %{context | content: recipe, view: :view_recipe}
+            else
+              error = Messages.get_recipe(:not_found)
+              %{context | error: error}
+            end
         end
 
       :view_recipe ->
@@ -99,7 +103,7 @@ defmodule Controller do
               %{context | content: grocery_list, view: :grocery_list}
             else
               error = Messages.get_recipe(:not_found)
-              %{context | content: error}
+              %{context | error: error}
             end
 
           "I" ->
@@ -111,7 +115,7 @@ defmodule Controller do
 
           _ ->
             error = Messages.get_prompt(:unknown)
-            %{context | content: error}
+            %{context | error: error}
         end
 
       :grocery_list ->
@@ -125,7 +129,7 @@ defmodule Controller do
 
           _ ->
             error = Messages.get_prompt(:unknown)
-            %{context | content: error}
+            %{context | error: error}
         end
 
       _ ->

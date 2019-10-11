@@ -14,6 +14,14 @@ defmodule Formatter do
     |> print_header()
     |> print_content()
     |> print_menu()
+    |> print_error()
+  end
+
+  def print_error(%{error: error} = context) do
+    error
+    |> UserInterface.display()
+
+    %{context | error: nil}
   end
 
   def print_header(%{header: header} = context) do
