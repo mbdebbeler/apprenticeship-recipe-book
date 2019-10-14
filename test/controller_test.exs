@@ -15,7 +15,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       output = fn -> run(example_context) end
@@ -33,7 +34,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert %{prompt: nil} != update_context(example_context)
@@ -50,7 +52,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert %{content: ["1) Ice Cubes\n"]} = fetch_content(example_context)
@@ -66,7 +69,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert %{view: :welcome} = fetch_content(example_context)
@@ -82,7 +86,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert example_context == fetch_content(example_context)
@@ -97,7 +102,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert %{content: nil} != fetch_content(example_context)
@@ -113,9 +119,9 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
-
 
       assert nil == fetch_content(example_context)
     end
@@ -129,7 +135,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert %{error: nil} != fetch_content(example_context)
@@ -145,7 +152,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: "1"
       }
 
       assert %{content: nil} != fetch_content(example_context)
@@ -161,7 +169,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert %{content: nil} != fetch_content(example_context)
@@ -177,7 +186,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert nil == fetch_content(example_context)
@@ -192,7 +202,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert %{error: nil} != fetch_content(example_context)
@@ -208,7 +219,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert %{content: nil} != fetch_content(example_context)
@@ -224,7 +236,8 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert nil == fetch_content(example_context)
@@ -239,12 +252,12 @@ defmodule ControllerTest do
         io: IO,
         prompt: "Foo",
         menu: "Bar",
-        error: nil
+        error: nil,
+        last_input: nil
       }
 
       assert %{error: nil} != fetch_content(example_context)
       assert %{view: :grocery_list} = fetch_content(example_context)
-
     end
   end
 end
