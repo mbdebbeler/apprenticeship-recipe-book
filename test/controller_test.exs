@@ -243,10 +243,10 @@ defmodule ControllerTest do
       assert nil == fetch_content(example_context)
     end
 
-    test "in view :grocery_list, when passed invalid input '1', updates error but not view" do
+    test "in view :grocery_list, when passed valid input '1', updates content but not view" do
       example_context = %{
         input: "1",
-        content: nil,
+        content: ["This was a recipe", "Yes, a recipe."],
         header: nil,
         view: :grocery_list,
         io: IO,

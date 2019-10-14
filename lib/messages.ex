@@ -29,7 +29,7 @@ defmodule Messages do
       :index => "Menu Options:\n# = View a Specific Recipe\nQ = Quit\n\n",
       :view_recipe =>
         "Menu Options:\nG = Generate a Grocery List for this Recipe\nI = Return to Recipe Index\nQ = Quit\n\n",
-      :grocery_list => "Menu Options:\nI = Return to Recipe Index\nQ = Quit\n\n"
+      :grocery_list => "Menu Options:\n# = Change # of servings for this grocery list\nI = Return to Recipe Index\nQ = Quit\n\n"
     }
 
     messages[view]

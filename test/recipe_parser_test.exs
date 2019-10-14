@@ -37,11 +37,130 @@ defmodule RecipeParserTest do
     end
   end
 
-  describe "is_before_section_break" do
+  describe "is_before_section_break/1" do
     test "when passed a list of strings, it will return a sub-list of strings before the blank line" do
       example_recipe_chunk = ["baz", "zab", "", "Recipes:", "bab"]
 
       assert is_before_section_break(example_recipe_chunk) == ["baz", "zab"]
+    end
+  end
+
+  describe "split_line_by_words/1" do
+    test "when passed a string, splits it by spaces" do
+      ingredients_line = "4 large dried New Mexico or guajillo chiles, stemmed, halved, seeded"
+
+      split_ingredients_line = [
+        "4",
+        "large",
+        "dried",
+        "New",
+        "Mexico",
+        "or",
+        "guajillo",
+        "chiles,",
+        "stemmed,",
+        "halved,",
+        "seeded"
+      ]
+
+      result = split_line_by_words(ingredients_line)
+
+      assert result == split_ingredients_line
+    end
+  end
+
+  describe "transform_line/2" do
+    test "when passed a list of strings and desired_servings, filters and multiplies integers by desired_servings, returns a list of strings" do
+      split_ingredients_line = [
+        "4",
+        "large",
+        "dried",
+        "New",
+        "Mexico",
+        "or",
+        "guajillo",
+        "chiles,",
+        "stemmed,",
+        "halved,",
+        "seeded"
+      ]
+
+      processed_ingredients_line = [
+        "8",
+        "large",
+        "dried",
+        "New",
+        "Mexico",
+        "or",
+        "guajillo",
+        "chiles,",
+        "stemmed,",
+        "halved,",
+        "seeded"
+      ]
+
+      desired_servings = 2
+
+      assert transform_line(split_ingredients_line, desired_servings) ==
+               processed_ingredients_line
+    end
+  end
+
+  describe "is_quantity/1" do
+    test "returns true when passed a string that respresents an integer" do
+      string_four = "4"
+
+      assert is_quantity(string_four) ==  true
+    end
+  end
+
+  describe "join_line_by_words/1" do
+    test "concatenates a list of strings into one string" do
+      ingredients_list = [
+        "4",
+        "large",
+        "dried",
+        "New",
+        "Mexico",
+        "or",
+        "guajillo",
+        "chiles,",
+        "stemmed,",
+        "halved,",
+        "seeded"
+      ]
+      ingredients_line = "4 large dried New Mexico or guajillo chiles, stemmed, halved, seeded"
+
+      assert join_line_by_words(ingredients_list) == ingredients_line
+    end
+  end
+
+  describe "change_servings/1" do
+    test "takes a context and returns an updated context" do
+      example_context = %{
+        input: "3",
+        content: ["5 spicy olives", "20 potato chips"],
+        header: nil,
+        view: :generate_grocery_list,
+        io: IO,
+        prompt: "Foo",
+        menu: "Bar",
+        error: nil,
+        last_input: "1"
+      }
+      transformed_context = %{
+        input: "3",
+        content: ["15 spicy olives", "60 potato chips"],
+        header: nil,
+        view: :generate_grocery_list,
+        io: IO,
+        prompt: "Foo",
+        menu: "Bar",
+        error: nil,
+        last_input: "3"
+      }
+
+      assert change_servings(example_context) == transformed_context
     end
   end
 end
