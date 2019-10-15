@@ -8,10 +8,10 @@ defmodule Controller do
       io: IO,
       prompt: nil,
       menu: nil,
-      error: nil
+      error: nil,
+      last_input: nil
     }
     |> run()
-
   end
 
   def run(%{input: "Q"} = context) do
@@ -42,7 +42,6 @@ defmodule Controller do
     %{context | prompt: Messages.get_prompt(view)}
   end
 
-
   def update_header(%{view: view} = context) do
     %{context | header: Messages.get_header(view)}
   end
@@ -56,87 +55,70 @@ defmodule Controller do
     |> fetch_content()
   end
 
-  def fetch_content(%{input: input, view: view} = context) do
-    case view do
-      :welcome ->
-        case input do
-          "I" ->
-            recipe_list = Messages.get_recipe(:all) |> Formatter.numbered_list()
-            %{context | content: recipe_list, view: :index}
+  def fetch_content(%{input: "Q", view: _}) do
+    nil
+  end
 
-          "Q" ->
-            nil
+  def fetch_content(%{input: "I", view: _} = context) do
+    content = Messages.get_recipe(:all) |> Formatter.numbered_list()
+    %{context | content: content, view: :index}
+  end
 
-          :welcome ->
-            context
-
-          _ ->
-            error = Messages.get_prompt(:unknown)
-            %{context | error: error}
-        end
-
-      :index ->
-        case input do
-          "Q" ->
-            nil
-
-          _ ->
-            if Messages.get_recipe(input) do
-              recipe =
-                Messages.get_recipe(input)
-                |> RecipeParser.read_file()
-
-              %{context | content: recipe, view: :view_recipe}
-            else
-              error = Messages.get_recipe(:not_found)
-              %{context | error: error}
-            end
-        end
-
-      :view_recipe ->
-        case input do
-          "G" ->
-            if Messages.get_recipe("1") do
-              grocery_list =
-                Messages.get_recipe("1")
-                |> RecipeParser.parse_grocery_list()
-                |> Formatter.bulleted_list()
-
-              %{context | content: grocery_list, view: :grocery_list}
-            else
-              error = Messages.get_recipe(:not_found)
-              %{context | error: error}
-            end
-
-          "I" ->
-            content = Messages.get_recipe(:all) |> Formatter.numbered_list()
-            %{context | content: content, view: :index}
-
-          "Q" ->
-            nil
-
-          _ ->
-            error = Messages.get_prompt(:unknown)
-            %{context | error: error}
-        end
-
-      :grocery_list ->
-        case input do
-          "I" ->
-            content = Messages.get_recipe(:all) |> Formatter.numbered_list()
-            %{context | content: content, view: :index}
-
-          "Q" ->
-            nil
-
-
-          _ ->
-            error = Messages.get_prompt(:unknown)
-            %{context | error: error}
-        end
-
-      _ ->
-        context
+  def fetch_content(%{input: input, view: :grocery_list} = context) do
+    if RecipeParser.is_valid_quantity(input) do
+      RecipeParser.change_servings(context)
+    else
+      fetch_unknown_error(context)
     end
+  end
+
+  def fetch_content(%{input: :welcome, view: :welcome} = context) do
+      context
+  end
+
+  def fetch_content(%{input: input, view: :index} = context) do
+    if Messages.get_recipe(input) do
+      fetch_recipe(context)
+    else
+      fetch_not_found_error(context)
+    end
+  end
+
+  def fetch_content(%{input: "G", view: :view_recipe, last_input: last_input} = context) do
+    if Messages.get_recipe(last_input) do
+      fetch_grocery_list(context)
+    else
+      fetch_not_found_error(context)
+    end
+  end
+
+  def fetch_content(%{input: _} = context) do
+    fetch_unknown_error(context)
+  end
+
+  def fetch_recipe(%{input: input} = context) do
+    recipe =
+      Messages.get_recipe(input)
+      |> RecipeParser.read_file()
+
+    %{context | content: recipe, view: :view_recipe, last_input: input}
+  end
+
+  def fetch_grocery_list(%{last_input: last_input} = context) do
+    grocery_list = Messages.get_recipe(last_input)
+    |> RecipeParser.parse_grocery_list()
+    |> Formatter.bulleted_list()
+
+    %{context | content: grocery_list, view: :grocery_list}
+  end
+
+  def fetch_unknown_error(context) do
+    error = Messages.get_prompt(:unknown)
+    %{context | error: error}
+  end
+
+  def fetch_not_found_error(context) do
+    error = Messages.get_prompt(:not_found)
+    %{context | error: error}
   end
 end

@@ -17,8 +17,9 @@ defmodule Messages do
       :welcome => "What would you like to do?\n",
       :index => "Which recipe would you like to view? Type the number and press enter.\n",
       :unknown =>
-        "I didn't understand that and I don't know what to do. Please enter a valid command.\n"
-
+        "I didn't understand that and I don't know what to do. Please enter a valid command.\n",
+      :not_found =>
+        "We either don't have that recipe or I can't find it. \n:(. Please choose another recipe.\n"
     }
 
     messages[prompt]
@@ -30,7 +31,8 @@ defmodule Messages do
       :index => "Menu Options:\n# = View a Specific Recipe\nQ = Quit\n\n",
       :view_recipe =>
         "Menu Options:\nG = Generate a Grocery List for this Recipe\nI = Return to Recipe Index\nQ = Quit\n\n",
-      :grocery_list => "Menu Options:\nI = Return to Recipe Index\nQ = Quit\n\n"
+      :grocery_list =>
+        "Menu Options:\n# = Change # of servings for this grocery list\nI = Return to Recipe Index\nQ = Quit\n\n"
     }
 
     messages[view]

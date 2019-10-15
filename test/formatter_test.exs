@@ -14,7 +14,9 @@ defmodule FormatterTest do
         "- 2 tablespoons water (additional if needed)\n"
       ]
 
-      assert bulleted_list(example_ingredients) == expected_output
+      output = bulleted_list(example_ingredients)
+
+      assert output == expected_output
     end
   end
 
@@ -28,13 +30,15 @@ defmodule FormatterTest do
         "1) 2 cups water (approximately)\n"
       ]
 
-      assert numbered_list(example_ingredients) == expected_output
+      output = numbered_list(example_ingredients)
+
+      assert output == expected_output
     end
   end
 
   describe "print_screen/1" do
     test "takes a context map, returns an unchanged context map" do
-      example_context = %{
+      initial_context = %{
         input: :welcome,
         header: nil,
         content: nil,
@@ -45,13 +49,15 @@ defmodule FormatterTest do
         error: nil
       }
 
-      assert print_screen(example_context) == example_context
+      updated_context = print_screen(initial_context)
+
+      assert updated_context == initial_context
     end
   end
 
   describe "print_header/1" do
     test "takes a context map, returns an unchanged context map" do
-      example_context = %{
+      initial_context = %{
         input: :welcome,
         header: nil,
         content: nil,
@@ -62,13 +68,15 @@ defmodule FormatterTest do
         error: nil
       }
 
-      assert print_header(example_context) == example_context
+      updated_context = print_header(initial_context)
+
+      assert updated_context == initial_context
     end
   end
 
   describe "print_menu/1" do
     test "takes a context map, returns an unchanged context map" do
-      example_context = %{
+      initial_context = %{
         input: :welcome,
         header: nil,
         content: nil,
@@ -79,13 +87,15 @@ defmodule FormatterTest do
         error: nil
       }
 
-      assert print_menu(example_context) == example_context
+      updated_context = print_menu(initial_context)
+
+      assert updated_context == initial_context
     end
   end
 
   describe "print_content/1" do
     test "takes a context map, returns an unchanged context map" do
-      example_context = %{
+      initial_context = %{
         input: :welcome,
         header: nil,
         content: nil,
@@ -96,7 +106,9 @@ defmodule FormatterTest do
         error: nil
       }
 
-      assert print_content(example_context) == example_context
+      updated_context = print_content(initial_context)
+
+      assert updated_context == initial_context
     end
   end
 end
