@@ -69,7 +69,7 @@ defmodule RecipeParser do
     transformed_line = []
 
     Enum.map(split_line, fn word ->
-      if is_quantity(word) do
+      if is_valid_quantity(word) do
         new_quantity = multiply_servings(word, desired_servings)
         transformed_line ++ Integer.to_string(new_quantity)
       else
@@ -82,10 +82,16 @@ defmodule RecipeParser do
     String.to_integer(word) * desired_servings
   end
 
-  def is_quantity(str) do
+  def is_valid_quantity(str) do
     case Integer.parse(str) do
-      {_num, ""} -> true
-      _ -> false
+      {num, ""} ->
+        if num > 0 do
+          true
+        else
+          false
+        end
+      _ ->
+        false
     end
   end
 

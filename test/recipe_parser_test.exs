@@ -106,11 +106,23 @@ defmodule RecipeParserTest do
     end
   end
 
-  describe "is_quantity/1" do
+  describe "is_valid_quantity/1" do
     test "returns true when passed a string that respresents an integer" do
       string_four = "4"
 
-      assert is_quantity(string_four) ==  true
+      assert is_valid_quantity(string_four) ==  true
+    end
+
+    test "returns false when passed -1" do
+      string_neg_one = "-1"
+
+      assert is_valid_quantity(string_neg_one) ==  false
+    end
+
+    test "returns false when passed 0" do
+      string_zero = "0"
+
+      assert is_valid_quantity(string_zero) ==  false
     end
   end
 

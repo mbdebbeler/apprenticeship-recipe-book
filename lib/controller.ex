@@ -65,7 +65,7 @@ defmodule Controller do
   end
 
   def fetch_content(%{input: input, view: :grocery_list} = context) do
-    if RecipeParser.is_quantity(input) && input > 0 do
+    if RecipeParser.is_valid_quantity(input) do
       RecipeParser.change_servings(context)
     else
       fetch_unknown_error(context)
