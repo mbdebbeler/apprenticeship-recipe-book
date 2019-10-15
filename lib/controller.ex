@@ -72,45 +72,44 @@ defmodule Controller do
     end
   end
 
-  def fetch_content(%{input: input, view: :welcome} = context) do
-    case input do
-      :welcome ->
-        context
-
-      _ ->
-        fetch_unknown_error(context)
-    end
+  def fetch_content(%{input: :welcome, view: :welcome} = context) do
+      context
   end
 
   def fetch_content(%{input: input, view: :index} = context) do
     if Messages.get_recipe(input) do
-      recipe =
-        Messages.get_recipe(input)
-        |> RecipeParser.read_file()
-
-      %{context | content: recipe, view: :view_recipe, last_input: input}
+      fetch_recipe(context)
     else
       fetch_not_found_error(context)
     end
   end
 
-  def fetch_content(%{input: input, view: :view_recipe, last_input: last_input} = context) do
-    case input do
-      "G" ->
-        if Messages.get_recipe(last_input) do
-          grocery_list =
-            Messages.get_recipe(last_input)
-            |> RecipeParser.parse_grocery_list()
-            |> Formatter.bulleted_list()
-
-          %{context | content: grocery_list, view: :grocery_list}
-        else
-          fetch_not_found_error(context)
-        end
-
-      _ ->
-        fetch_unknown_error(context)
+  def fetch_content(%{input: "G", view: :view_recipe, last_input: last_input} = context) do
+    if Messages.get_recipe(last_input) do
+      fetch_grocery_list(context)
+    else
+      fetch_not_found_error(context)
     end
+  end
+
+  def fetch_content(%{input: _} = context) do
+    fetch_unknown_error(context)
+  end
+
+  def fetch_recipe(%{input: input} = context) do
+    recipe =
+      Messages.get_recipe(input)
+      |> RecipeParser.read_file()
+
+    %{context | content: recipe, view: :view_recipe, last_input: input}
+  end
+
+  def fetch_grocery_list(%{last_input: last_input} = context) do
+    grocery_list = Messages.get_recipe(last_input)
+    |> RecipeParser.parse_grocery_list()
+    |> Formatter.bulleted_list()
+
+    %{context | content: grocery_list, view: :grocery_list}
   end
 
   def fetch_unknown_error(context) do

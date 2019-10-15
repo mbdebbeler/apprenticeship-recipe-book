@@ -325,4 +325,56 @@ defmodule ControllerTest do
       assert %{view: :grocery_list} = updated_context
     end
   end
+
+  describe "fetch_recipe/1" do
+    test "takes a context and returns a context with view updated to :view_recipe, content, and last_input" do
+      initial_context = %{
+        input: "1",
+        content: nil,
+        header: nil,
+        view: :grocery_list,
+        io: IO,
+        prompt: nil,
+        menu: nil,
+        error: nil,
+        last_input: nil
+      }
+
+      updated_context = fetch_recipe(initial_context)
+
+      assert %{
+               content: "Title:\nIce Cubes\n\nIngredients:\n2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\nDirections:\n- Empty any ice cubes that are left in the trays into the bin.\n- Take the trays over to the sink and fill them with water. (Tip: hot water will freeze faster and the cubes will be more clear.)\n- Place the water-filled ice trays back in the freezer.\n- Replace the ice bin if you had to remove it.\n- Shut the door to the freezer.\n- Be sure to leave for around 4-6 hours at least to make sure it is frozen.\n"
+             } = updated_context
+
+      assert %{view: :view_recipe} = updated_context
+      assert %{last_input: "1"} = updated_context
+
+    end
+  end
+
+  describe "fetch_grocery_list/1" do
+    test "takes a context and returns a context with view updated to :grocery_list, content, and last_input" do
+      initial_context = %{
+        input: "1",
+        content: nil,
+        header: nil,
+        view: :index,
+        io: IO,
+        prompt: nil,
+        menu: nil,
+        error: nil,
+        last_input: "1"
+      }
+
+      updated_context = fetch_grocery_list(initial_context)
+
+      assert %{
+               content: ["- 2 cups water (approximately)\n",
+               "- 2 tablespoons water (additional if needed)\n"]
+             } = updated_context
+
+      assert %{view: :grocery_list} = updated_context
+      assert %{last_input: "1"} = updated_context
+    end
+  end
 end
