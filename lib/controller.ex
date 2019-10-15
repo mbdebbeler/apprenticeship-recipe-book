@@ -70,7 +70,6 @@ defmodule Controller do
     else
       fetch_unknown_error(context)
     end
-
   end
 
   def fetch_content(%{input: input, view: :welcome} = context) do

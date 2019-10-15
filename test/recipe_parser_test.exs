@@ -4,10 +4,14 @@ defmodule RecipeParserTest do
 
   describe "read_file/1" do
     test "accepts string filepath and returns string of file contents" do
-      example_filepath = './recipes/ice_cubes.txt'
+      filepath = './recipes/ice_cubes.txt'
 
-      assert read_file(example_filepath) ==
-               "Title:\nIce Cubes\n\nIngredients:\n2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\nDirections:\n- Empty any ice cubes that are left in the trays into the bin.\n- Take the trays over to the sink and fill them with water. (Tip: hot water will freeze faster and the cubes will be more clear.)\n- Place the water-filled ice trays back in the freezer.\n- Replace the ice bin if you had to remove it.\n- Shut the door to the freezer.\n- Be sure to leave for around 4-6 hours at least to make sure it is frozen.\n"
+      expected_output =
+        "Title:\nIce Cubes\n\nIngredients:\n2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\nDirections:\n- Empty any ice cubes that are left in the trays into the bin.\n- Take the trays over to the sink and fill them with water. (Tip: hot water will freeze faster and the cubes will be more clear.)\n- Place the water-filled ice trays back in the freezer.\n- Replace the ice bin if you had to remove it.\n- Shut the door to the freezer.\n- Be sure to leave for around 4-6 hours at least to make sure it is frozen.\n"
+
+      output = read_file(filepath)
+
+      assert output == expected_output
     end
   end
 
@@ -110,19 +114,19 @@ defmodule RecipeParserTest do
     test "returns true when passed a string that respresents an integer" do
       string_four = "4"
 
-      assert is_valid_quantity(string_four) ==  true
+      assert is_valid_quantity(string_four) == true
     end
 
     test "returns false when passed -1" do
       string_neg_one = "-1"
 
-      assert is_valid_quantity(string_neg_one) ==  false
+      assert is_valid_quantity(string_neg_one) == false
     end
 
     test "returns false when passed 0" do
       string_zero = "0"
 
-      assert is_valid_quantity(string_zero) ==  false
+      assert is_valid_quantity(string_zero) == false
     end
   end
 
@@ -141,6 +145,7 @@ defmodule RecipeParserTest do
         "halved,",
         "seeded"
       ]
+
       ingredients_line = "4 large dried New Mexico or guajillo chiles, stemmed, halved, seeded"
 
       assert join_line_by_words(ingredients_list) == ingredients_line
@@ -160,6 +165,7 @@ defmodule RecipeParserTest do
         error: nil,
         last_input: "1"
       }
+
       transformed_context = %{
         input: "3",
         content: ["15 spicy olives", "60 potato chips"],

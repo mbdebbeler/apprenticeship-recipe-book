@@ -12,7 +12,9 @@ defmodule UserInterfaceTest do
         input: "tango"
       }
 
-      assert %{input: "Y"} = get_input(example_context)
+      updated_context = get_input(example_context)
+
+      assert %{input: "Y"} = updated_context
     end
 
     test "when passed a context and invalid input nil, returns a context with input '!'" do
@@ -24,7 +26,9 @@ defmodule UserInterfaceTest do
         input: nil
       }
 
-      assert %{input: "!"} = get_input(example_context)
+      updated_context = get_input(example_context)
+
+      assert %{input: "!"} = updated_context
     end
   end
 
@@ -36,7 +40,10 @@ defmodule UserInterfaceTest do
         assert example_message |> display() == :ok
       end
 
-      assert capture_io(response) == example_message <> "\n"
+      output = capture_io(response)
+      expected_output = example_message <> "\n"
+
+      assert output == expected_output
     end
   end
 
@@ -46,7 +53,10 @@ defmodule UserInterfaceTest do
         assert line_break() == :ok
       end
 
-      assert capture_io(line_break) == "\n\n"
+      output = capture_io(line_break)
+      expected_output = "\n\n"
+
+      assert output == expected_output
     end
   end
 end

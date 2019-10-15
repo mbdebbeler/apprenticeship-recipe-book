@@ -25,8 +25,7 @@ defmodule RecipeParser do
       |> split_line_by_words
       |> transform_line(String.to_integer(desired_servings))
       |> join_line_by_words
-    end
-      )
+    end)
   end
 
   def split_file_by_lines(recipe) do
@@ -90,9 +89,9 @@ defmodule RecipeParser do
         else
           false
         end
+
       _ ->
         false
     end
   end
-
 end
