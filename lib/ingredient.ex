@@ -1,5 +1,5 @@
 defmodule Ingredient do
 
-  defstruct []
+  defstruct [:name, :quantity, :unit]
 
 end
