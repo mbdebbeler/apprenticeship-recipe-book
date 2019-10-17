@@ -11,18 +11,20 @@ defmodule WordToNumberTest do
       assert number == expected_number
     end
 
-    test "returns nil if the word isn't a number" do
+    test "returns a word if it isn't a number" do
       word = "octopus"
-      expected_output = nil
+      expected_output = "octopus"
       output = convert(word)
 
       assert output == expected_output
     end
+  end
 
-    test "handles capitalized and lowercased words" do
-      word = "Five"
-      expected_output = 5
-      output = convert(word)
+  describe "convert_indefinite/1" do
+    test "converts 'a dozen' into 12" do
+      word_list = ["a", "dozen", "apples"]
+      output = convert_indefinite(word_list)
+      expected_output = [12, ["apples"]]
 
       assert output == expected_output
     end
