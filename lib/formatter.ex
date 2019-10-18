@@ -7,7 +7,7 @@ defmodule Formatter do
   def numbered_list(items) do
     items
     |> Enum.with_index(1)
-    |> Enum.map(fn {k,v}-> "#{v}) #{k}\n" end)
+    |> Enum.map(fn {k, v} -> "#{v}) #{k}\n" end)
   end
 
   def print_screen(context) do

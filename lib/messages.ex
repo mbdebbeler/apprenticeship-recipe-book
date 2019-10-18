@@ -38,19 +38,14 @@ defmodule Messages do
     messages[view]
   end
 
-  def get_recipe(name) when name != :all do
-    recipes = %{
-      "1" => './recipes/ice_cubes.txt',
-      :ice_cubes => './recipes/ice_cubes.txt',
-      :not_found =>
-        "We either don't have that recipe or I can't find it. \n:(. Please choose another recipe.\n"
-    }
-
-    recipes[name]
+  def get_recipe(number) when number != :all do
+    RecipeParser.generate_recipe_map()
+    |> Map.values()
+    |> Enum.fetch!(String.to_integer(number) - 1)
   end
 
   def get_recipe(:all) do
-    recipes = RecipeParser.generate_recipe_map
-    Map.keys(recipes)
+    RecipeParser.generate_recipe_map()
+    |> Map.keys()
   end
 end

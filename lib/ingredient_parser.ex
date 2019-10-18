@@ -2,14 +2,15 @@ defmodule IngredientParser do
   require WordToNumber
 
   def find_quantity(ingredient_data, recipe_line) do
-     quantity = recipe_line
-     |> downcase_line
-     |> split_line_by_words
-     |> handle_word_numbers
-     |> handle_indefinite_articles
-     |> drop_non_quantities
+    quantity =
+      recipe_line
+      |> downcase_line
+      |> split_line_by_words
+      |> handle_word_numbers
+      |> handle_indefinite_articles
+      |> drop_non_quantities
 
-     %Ingredient{ingredient_data | quantity: quantity}
+    %Ingredient{ingredient_data | quantity: quantity}
   end
 
   defp split_line_by_words(line) do
@@ -20,6 +21,7 @@ defmodule IngredientParser do
   defp handle_indefinite_articles(word_list) do
     list = Enum.to_list(word_list)
     first_item = List.first(list)
+
     if is_integer(first_item) do
       word_list
     else
@@ -34,7 +36,7 @@ defmodule IngredientParser do
   defp drop_non_quantities(word_list) do
     case Enum.fetch(word_list, 0) do
       {:ok, x} -> x
-      :error   -> nil
+      :error -> nil
     end
   end
 
@@ -55,5 +57,4 @@ defmodule IngredientParser do
         false
     end
   end
-
 end

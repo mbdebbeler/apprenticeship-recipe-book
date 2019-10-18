@@ -45,10 +45,22 @@ defmodule ControllerTest do
                updated_context
 
       assert %{header: "Recipe Index:"} = updated_context
-      assert %{content: ["1) Bun Thit Nuong\n", "2) Chicken Enmoladas\n",
-               "3) Classic Pasta\n", "4) Cookies\n", "5) Gua Bao\n",
-               "6) Ice Cubes\n", "7) Lu Ro Fan\n", "8) Papaya Salad\n",
-               "9) Spanakopita\n", "10) Tuscan Ragu\n"]} = updated_context
+
+      assert %{
+               content: [
+                 "1) Bun Thit Nuong\n",
+                 "2) Chicken Enmoladas\n",
+                 "3) Classic Pasta\n",
+                 "4) Cookies\n",
+                 "5) Gua Bao\n",
+                 "6) Ice Cubes\n",
+                 "7) Lu Ro Fan\n",
+                 "8) Papaya Salad\n",
+                 "9) Spanakopita\n",
+                 "10) Tuscan Ragu\n"
+               ]
+             } = updated_context
+
       assert %{menu: "Menu Options:\n# = View a Specific Recipe\nQ = Quit\n\n"} = updated_context
     end
   end
@@ -69,10 +81,21 @@ defmodule ControllerTest do
 
       updated_context = fetch_content(initial_context)
 
-      assert %{content: ["1) Bun Thit Nuong\n", "2) Chicken Enmoladas\n",
-               "3) Classic Pasta\n", "4) Cookies\n", "5) Gua Bao\n",
-               "6) Ice Cubes\n", "7) Lu Ro Fan\n", "8) Papaya Salad\n",
-               "9) Spanakopita\n", "10) Tuscan Ragu\n"]} = updated_context
+      assert %{
+               content: [
+                 "1) Bun Thit Nuong\n",
+                 "2) Chicken Enmoladas\n",
+                 "3) Classic Pasta\n",
+                 "4) Cookies\n",
+                 "5) Gua Bao\n",
+                 "6) Ice Cubes\n",
+                 "7) Lu Ro Fan\n",
+                 "8) Papaya Salad\n",
+                 "9) Spanakopita\n",
+                 "10) Tuscan Ragu\n"
+               ]
+             } = updated_context
+
       assert %{view: :index} = updated_context
     end
 
@@ -119,7 +142,7 @@ defmodule ControllerTest do
 
     test "in view :index, when passed valid input '1', updates content and view" do
       initial_context = %{
-        input: "1",
+        input: "6",
         content: nil,
         header: nil,
         view: :index,
@@ -160,7 +183,7 @@ defmodule ControllerTest do
 
     test "in view :index, when passed invalid input '9', updates error message but not view" do
       initial_context = %{
-        input: "9",
+        input: "46",
         content: nil,
         header: nil,
         view: :index,
@@ -191,7 +214,7 @@ defmodule ControllerTest do
         prompt: nil,
         menu: "Bar",
         error: nil,
-        last_input: "1"
+        last_input: "6"
       }
 
       updated_context = fetch_content(initial_context)
@@ -221,10 +244,21 @@ defmodule ControllerTest do
 
       updated_context = fetch_content(initial_context)
 
-      assert %{content: ["1) Bun Thit Nuong\n", "2) Chicken Enmoladas\n",
-               "3) Classic Pasta\n", "4) Cookies\n", "5) Gua Bao\n",
-               "6) Ice Cubes\n", "7) Lu Ro Fan\n", "8) Papaya Salad\n",
-               "9) Spanakopita\n", "10) Tuscan Ragu\n"]} = updated_context
+      assert %{
+               content: [
+                 "1) Bun Thit Nuong\n",
+                 "2) Chicken Enmoladas\n",
+                 "3) Classic Pasta\n",
+                 "4) Cookies\n",
+                 "5) Gua Bao\n",
+                 "6) Ice Cubes\n",
+                 "7) Lu Ro Fan\n",
+                 "8) Papaya Salad\n",
+                 "9) Spanakopita\n",
+                 "10) Tuscan Ragu\n"
+               ]
+             } = updated_context
+
       assert %{view: :index} = updated_context
     end
 
@@ -248,7 +282,7 @@ defmodule ControllerTest do
 
     test "in view :view_recipe, when passed invalid input '1', updates error but not view" do
       initial_context = %{
-        input: "1",
+        input: "6",
         content: nil,
         header: nil,
         view: :view_recipe,
@@ -284,10 +318,21 @@ defmodule ControllerTest do
 
       updated_context = fetch_content(initial_context)
 
-      assert %{content: ["1) Bun Thit Nuong\n", "2) Chicken Enmoladas\n",
-               "3) Classic Pasta\n", "4) Cookies\n", "5) Gua Bao\n",
-               "6) Ice Cubes\n", "7) Lu Ro Fan\n", "8) Papaya Salad\n",
-               "9) Spanakopita\n", "10) Tuscan Ragu\n"]} = updated_context
+      assert %{
+               content: [
+                 "1) Bun Thit Nuong\n",
+                 "2) Chicken Enmoladas\n",
+                 "3) Classic Pasta\n",
+                 "4) Cookies\n",
+                 "5) Gua Bao\n",
+                 "6) Ice Cubes\n",
+                 "7) Lu Ro Fan\n",
+                 "8) Papaya Salad\n",
+                 "9) Spanakopita\n",
+                 "10) Tuscan Ragu\n"
+               ]
+             } = updated_context
+
       assert %{view: :index} = updated_context
     end
 
@@ -322,7 +367,7 @@ defmodule ControllerTest do
         prompt: nil,
         menu: nil,
         error: nil,
-        last_input: "1"
+        last_input: "6"
       }
 
       updated_context = fetch_content(initial_context)
@@ -341,7 +386,7 @@ defmodule ControllerTest do
   describe "fetch_recipe/1" do
     test "takes a context and returns a context with view updated to :view_recipe, content, and last_input" do
       initial_context = %{
-        input: "1",
+        input: "6",
         content: nil,
         header: nil,
         view: :grocery_list,
@@ -355,19 +400,19 @@ defmodule ControllerTest do
       updated_context = fetch_recipe(initial_context)
 
       assert %{
-               content: "Title:\nIce Cubes\n\nIngredients:\n2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\nDirections:\n- Empty any ice cubes that are left in the trays into the bin.\n- Take the trays over to the sink and fill them with water. (Tip: hot water will freeze faster and the cubes will be more clear.)\n- Place the water-filled ice trays back in the freezer.\n- Replace the ice bin if you had to remove it.\n- Shut the door to the freezer.\n- Be sure to leave for around 4-6 hours at least to make sure it is frozen.\n"
+               content:
+                 "Title:\nIce Cubes\n\nIngredients:\n2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\nDirections:\n- Empty any ice cubes that are left in the trays into the bin.\n- Take the trays over to the sink and fill them with water. (Tip: hot water will freeze faster and the cubes will be more clear.)\n- Place the water-filled ice trays back in the freezer.\n- Replace the ice bin if you had to remove it.\n- Shut the door to the freezer.\n- Be sure to leave for around 4-6 hours at least to make sure it is frozen.\n"
              } = updated_context
 
       assert %{view: :view_recipe} = updated_context
-      assert %{last_input: "1"} = updated_context
-
+      assert %{last_input: "6"} = updated_context
     end
   end
 
   describe "fetch_grocery_list/1" do
     test "takes a context and returns a context with view updated to :grocery_list, content, and last_input" do
       initial_context = %{
-        input: "1",
+        input: "6",
         content: nil,
         header: nil,
         view: :index,
@@ -375,18 +420,20 @@ defmodule ControllerTest do
         prompt: nil,
         menu: nil,
         error: nil,
-        last_input: "1"
+        last_input: "6"
       }
 
       updated_context = fetch_grocery_list(initial_context)
 
       assert %{
-               content: ["- 2 cups water (approximately)\n",
-               "- 2 tablespoons water (additional if needed)\n"]
+               content: [
+                 "- 2 cups water (approximately)\n",
+                 "- 2 tablespoons water (additional if needed)\n"
+               ]
              } = updated_context
 
       assert %{view: :grocery_list} = updated_context
-      assert %{last_input: "1"} = updated_context
+      assert %{last_input: "6"} = updated_context
     end
   end
 end
