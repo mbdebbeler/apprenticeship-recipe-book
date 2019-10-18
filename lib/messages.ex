@@ -50,10 +50,7 @@ defmodule Messages do
   end
 
   def get_recipe(:all) do
-    recipes = %{
-      "1" => "Ice Cubes"
-    }
-
-    Map.values(recipes)
+    recipes = RecipeParser.generate_recipe_map
+    Map.keys(recipes)
   end
 end

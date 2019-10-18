@@ -45,7 +45,10 @@ defmodule ControllerTest do
                updated_context
 
       assert %{header: "Recipe Index:"} = updated_context
-      assert %{content: ["1) Ice Cubes\n"]} = updated_context
+      assert %{content: ["1) Bun Thit Nuong\n", "2) Chicken Enmoladas\n",
+               "3) Classic Pasta\n", "4) Cookies\n", "5) Gua Bao\n",
+               "6) Ice Cubes\n", "7) Lu Ro Fan\n", "8) Papaya Salad\n",
+               "9) Spanakopita\n", "10) Tuscan Ragu\n"]} = updated_context
       assert %{menu: "Menu Options:\n# = View a Specific Recipe\nQ = Quit\n\n"} = updated_context
     end
   end
@@ -66,7 +69,10 @@ defmodule ControllerTest do
 
       updated_context = fetch_content(initial_context)
 
-      assert %{content: ["1) Ice Cubes\n"]} = updated_context
+      assert %{content: ["1) Bun Thit Nuong\n", "2) Chicken Enmoladas\n",
+               "3) Classic Pasta\n", "4) Cookies\n", "5) Gua Bao\n",
+               "6) Ice Cubes\n", "7) Lu Ro Fan\n", "8) Papaya Salad\n",
+               "9) Spanakopita\n", "10) Tuscan Ragu\n"]} = updated_context
       assert %{view: :index} = updated_context
     end
 
@@ -215,7 +221,10 @@ defmodule ControllerTest do
 
       updated_context = fetch_content(initial_context)
 
-      assert %{content: ["1) Ice Cubes\n"]} = updated_context
+      assert %{content: ["1) Bun Thit Nuong\n", "2) Chicken Enmoladas\n",
+               "3) Classic Pasta\n", "4) Cookies\n", "5) Gua Bao\n",
+               "6) Ice Cubes\n", "7) Lu Ro Fan\n", "8) Papaya Salad\n",
+               "9) Spanakopita\n", "10) Tuscan Ragu\n"]} = updated_context
       assert %{view: :index} = updated_context
     end
 
@@ -275,7 +284,10 @@ defmodule ControllerTest do
 
       updated_context = fetch_content(initial_context)
 
-      assert %{content: ["1) Ice Cubes\n"]} = updated_context
+      assert %{content: ["1) Bun Thit Nuong\n", "2) Chicken Enmoladas\n",
+               "3) Classic Pasta\n", "4) Cookies\n", "5) Gua Bao\n",
+               "6) Ice Cubes\n", "7) Lu Ro Fan\n", "8) Papaya Salad\n",
+               "9) Spanakopita\n", "10) Tuscan Ragu\n"]} = updated_context
       assert %{view: :index} = updated_context
     end
 
