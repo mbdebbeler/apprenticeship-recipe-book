@@ -4,7 +4,19 @@ defmodule RecipeParserTest do
 
   describe "generate_recipe_map/0" do
     output = generate_recipe_map()
-    expected_output = %{"Bun Thit Nuong" => "recipes/bun_thit_nuong.txt", "Chicken Enmoladas" => "recipes/chicken_enmoladas.txt", "Classic Pasta" => "recipes/classic_pasta.txt", "Cookies" => "recipes/cookies.txt", "Gua Bao" => "recipes/gua_bao.txt", "Ice Cubes" => "recipes/ice_cubes.txt", "Lu Ro Fan" => "recipes/lu_ro_fan.txt", "Papaya Salad" => "recipes/papaya_salad.txt", "Spanakopita" => "recipes/spanakopita.txt", "Tuscan Ragu" => "recipes/tuscan_ragu.txt"}
+
+    expected_output = %{
+      "Bun Thit Nuong" => "recipes/bun_thit_nuong.txt",
+      "Chicken Enmoladas" => "recipes/chicken_enmoladas.txt",
+      "Classic Pasta" => "recipes/classic_pasta.txt",
+      "Cookies" => "recipes/cookies.txt",
+      "Gua Bao" => "recipes/gua_bao.txt",
+      "Ice Cubes" => "recipes/ice_cubes.txt",
+      "Lu Ro Fan" => "recipes/lu_ro_fan.txt",
+      "Papaya Salad" => "recipes/papaya_salad.txt",
+      "Spanakopita" => "recipes/spanakopita.txt",
+      "Tuscan Ragu" => "recipes/tuscan_ragu.txt"
+    }
 
     assert output == expected_output
   end
@@ -13,7 +25,19 @@ defmodule RecipeParserTest do
     test "returns a List of of all the recipes in the recipes file" do
       filepath = "./recipes/*.txt"
       output = fetch_list_of_recipe_files(filepath)
-      expected_output = ["recipes/bun_thit_nuong.txt", "recipes/chicken_enmoladas.txt", "recipes/classic_pasta.txt", "recipes/cookies.txt", "recipes/gua_bao.txt", "recipes/ice_cubes.txt", "recipes/lu_ro_fan.txt", "recipes/papaya_salad.txt", "recipes/spanakopita.txt", "recipes/tuscan_ragu.txt"]
+
+      expected_output = [
+        "recipes/bun_thit_nuong.txt",
+        "recipes/chicken_enmoladas.txt",
+        "recipes/classic_pasta.txt",
+        "recipes/cookies.txt",
+        "recipes/gua_bao.txt",
+        "recipes/ice_cubes.txt",
+        "recipes/lu_ro_fan.txt",
+        "recipes/papaya_salad.txt",
+        "recipes/spanakopita.txt",
+        "recipes/tuscan_ragu.txt"
+      ]
 
       assert output == expected_output
     end
@@ -23,7 +47,19 @@ defmodule RecipeParserTest do
     test "returns a list of file names formatted as capitalized English titles" do
       filepath = "./recipes/*.txt"
       output = parse_list_of_recipe_names(filepath)
-      expected_output = ["Bun Thit Nuong", "Chicken Enmoladas", "Classic Pasta", "Cookies", "Gua Bao", "Ice Cubes", "Lu Ro Fan", "Papaya Salad", "Spanakopita", "Tuscan Ragu"]
+
+      expected_output = [
+        "Bun Thit Nuong",
+        "Chicken Enmoladas",
+        "Classic Pasta",
+        "Cookies",
+        "Gua Bao",
+        "Ice Cubes",
+        "Lu Ro Fan",
+        "Papaya Salad",
+        "Spanakopita",
+        "Tuscan Ragu"
+      ]
 
       assert output == expected_output
     end

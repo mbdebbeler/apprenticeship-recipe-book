@@ -28,7 +28,7 @@ defmodule RecipeParser do
     String.split(string)
     |> Enum.map(&String.capitalize/1)
     |> Enum.join(" ")
-end
+  end
 
   def parse_grocery_list(filepath) do
     filepath

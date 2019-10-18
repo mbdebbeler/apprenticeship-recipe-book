@@ -73,11 +73,11 @@ defmodule Controller do
   end
 
   def fetch_content(%{input: :welcome, view: :welcome} = context) do
-      context
+    context
   end
 
   def fetch_content(%{input: input, view: :index} = context) do
-    if Messages.get_recipe(input) do
+    if Enum.member?(1..10, String.to_integer(input)) do
       fetch_recipe(context)
     else
       fetch_not_found_error(context)
@@ -105,9 +105,10 @@ defmodule Controller do
   end
 
   def fetch_grocery_list(%{last_input: last_input} = context) do
-    grocery_list = Messages.get_recipe(last_input)
-    |> RecipeParser.parse_grocery_list()
-    |> Formatter.bulleted_list()
+    grocery_list =
+      Messages.get_recipe(last_input)
+      |> RecipeParser.parse_grocery_list()
+      |> Formatter.bulleted_list()
 
     %{context | content: grocery_list, view: :grocery_list}
   end
