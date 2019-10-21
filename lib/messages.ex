@@ -20,7 +20,7 @@ defmodule Messages do
         "I didn't understand that and I don't know what to do. Please enter a valid command.\n",
       :not_found =>
         "We either don't have that recipe or I can't find it. \n:(. Please choose another recipe.\n",
-        :exit => nil
+      :exit => nil
     }
 
     messages[prompt]
@@ -34,7 +34,7 @@ defmodule Messages do
         "Menu Options:\nG = Generate a Grocery List for this Recipe\nI = Return to Recipe Index\nQ = Quit\n\n",
       :grocery_list =>
         "Menu Options:\n# = Change # of servings for this grocery list\nI = Return to Recipe Index\nQ = Quit\n\n",
-        :exit => nil
+      :exit => nil
     }
 
     messages[view]
@@ -49,5 +49,12 @@ defmodule Messages do
   def get_recipe(:all) do
     RecipeParser.generate_recipe_map()
     |> Map.keys()
+    |> generate_numbered_list
+  end
+
+  defp generate_numbered_list(items) do
+    items
+    |> Enum.with_index(1)
+    |> Enum.map(fn {k, v} -> "#{v}) #{k}\n" end)
   end
 end
