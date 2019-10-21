@@ -1,4 +1,15 @@
 defmodule CommandLineUI do
+
+  defimpl UI, for: CommandLineUI do
+    def get_input(context) do
+      IO.gets(context.prompt)
+    end
+
+    def refresh_display(context) do
+      IO.puts(context.content)
+    end
+  end
+
   def get_input(%{prompt: prompt, io: io} = context) do
     prompt
     |> io.gets()
@@ -25,9 +36,7 @@ defmodule CommandLineUI do
     String.capitalize(message)
   end
 
-  defp prepare_next_screen(
-         %{error: error, menu: menu, header: header, content: content}
-       ) do
+  defp prepare_next_screen(%{error: error, menu: menu, header: header, content: content}) do
     [header, content, menu, error]
     |> Enum.reject(fn x -> x == nil end)
     |> Enum.join("\n")
