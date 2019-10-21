@@ -35,8 +35,8 @@ defmodule CommandLineUITest do
     end
   end
 
-  describe "clear_screen/1" do
-    test "clears the screen and leaves the context map unchanged" do
+  describe "refresh_display/1" do
+    test "clears the screen, prepares the next screen, outputs it to IO and leaves the context map unchanged" do
       initial_context = %{
         content: nil,
         header: "Welcome to Recipe Book!",
@@ -48,10 +48,9 @@ defmodule CommandLineUITest do
         last_input: nil
       }
 
-      updated_context = clear_screen(initial_context)
+      updated_context = refresh_display(initial_context)
 
       assert initial_context = updated_context
     end
   end
-
 end

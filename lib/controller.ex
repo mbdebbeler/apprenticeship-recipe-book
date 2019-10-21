@@ -16,16 +16,14 @@ defmodule Controller do
 
   def run(%{input: "Q"} = context) do
     context
-    |> CommandLineUI.clear_screen()
     |> update_context()
-    |> Formatter.print_screen()
+    |> CommandLineUI.refresh_display()
   end
 
   def run(context) do
     context
-    |> CommandLineUI.clear_screen()
     |> update_context()
-    |> Formatter.print_screen()
+    |> CommandLineUI.refresh_display()
     |> CommandLineUI.get_input()
     |> run()
   end
@@ -38,29 +36,29 @@ defmodule Controller do
     |> update_prompt()
   end
 
-  def update_prompt(%{view: view} = context) do
+  defp update_prompt(%{view: view} = context) do
     %{context | prompt: Messages.get_prompt(view)}
   end
 
-  def update_header(%{view: view} = context) do
+  defp update_header(%{view: view} = context) do
     %{context | header: Messages.get_header(view)}
   end
 
-  def update_menu(%{view: view} = context) do
+  defp update_menu(%{view: view} = context) do
     %{context | menu: Messages.get_menu(view)}
   end
 
-  def update_content(context) do
+  defp update_content(context) do
     context
     |> fetch_content()
   end
 
   def fetch_content(%{input: "Q", view: _} = context) do
-    %{context | view: :exit }
+    %{context | view: :exit, content: nil}
   end
 
   def fetch_content(%{input: "I", view: _} = context) do
-    content = Messages.get_recipe(:all) |> Formatter.numbered_list()
+    content = Messages.get_recipe(:all)
     %{context | content: content, view: :index}
   end
 
@@ -108,7 +106,6 @@ defmodule Controller do
     grocery_list =
       Messages.get_recipe(last_input)
       |> RecipeParser.parse_grocery_list()
-      |> Formatter.bulleted_list()
 
     %{context | content: grocery_list, view: :grocery_list}
   end
