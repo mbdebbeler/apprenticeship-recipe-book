@@ -37,13 +37,13 @@ defmodule FormatterTest do
   end
 
   describe "print_screen/1" do
-    test "takes a context map, returns an unchanged context map" do
+    test "takes a context map, returns an unchanged context map and a message to print" do
       initial_context = %{
         input: :welcome,
         header: nil,
         content: nil,
         view: :welcome,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil
@@ -51,64 +51,8 @@ defmodule FormatterTest do
 
       updated_context = print_screen(initial_context)
 
-      assert updated_context == initial_context
+      assert %{view: :welcome} = updated_context
     end
   end
 
-  describe "print_header/1" do
-    test "takes a context map, returns an unchanged context map" do
-      initial_context = %{
-        input: :welcome,
-        header: nil,
-        content: nil,
-        view: :welcome,
-        io: IO,
-        prompt: nil,
-        menu: nil,
-        error: nil
-      }
-
-      updated_context = print_header(initial_context)
-
-      assert updated_context == initial_context
-    end
-  end
-
-  describe "print_menu/1" do
-    test "takes a context map, returns an unchanged context map" do
-      initial_context = %{
-        input: :welcome,
-        header: nil,
-        content: nil,
-        view: :welcome,
-        io: IO,
-        prompt: nil,
-        menu: nil,
-        error: nil
-      }
-
-      updated_context = print_menu(initial_context)
-
-      assert updated_context == initial_context
-    end
-  end
-
-  describe "print_content/1" do
-    test "takes a context map, returns an unchanged context map" do
-      initial_context = %{
-        input: :welcome,
-        header: nil,
-        content: nil,
-        view: :welcome,
-        io: IO,
-        prompt: nil,
-        menu: nil,
-        error: nil
-      }
-
-      updated_context = print_content(initial_context)
-
-      assert updated_context == initial_context
-    end
-  end
 end

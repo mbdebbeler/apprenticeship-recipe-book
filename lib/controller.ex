@@ -16,17 +16,17 @@ defmodule Controller do
 
   def run(%{input: "Q"} = context) do
     context
-    |> UserInterface.clear_screen()
-
-    UserInterface.display("Goodbye!\n")
+    |> CommandLineUI.clear_screen()
+    |> update_context()
+    |> Formatter.print_screen()
   end
 
   def run(context) do
     context
-    |> UserInterface.clear_screen()
+    |> CommandLineUI.clear_screen()
     |> update_context()
     |> Formatter.print_screen()
-    |> UserInterface.get_input()
+    |> CommandLineUI.get_input()
     |> run()
   end
 
@@ -55,8 +55,8 @@ defmodule Controller do
     |> fetch_content()
   end
 
-  def fetch_content(%{input: "Q", view: _}) do
-    nil
+  def fetch_content(%{input: "Q", view: _} = context) do
+    %{context | view: :exit }
   end
 
   def fetch_content(%{input: "I", view: _} = context) do
