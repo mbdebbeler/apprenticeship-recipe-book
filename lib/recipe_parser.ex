@@ -36,6 +36,12 @@ defmodule RecipeParser do
     |> split_file_by_lines
     |> is_after_ingredients
     |> is_before_section_break
+    |> generate_bulleted_list
+  end
+
+  def generate_bulleted_list(items) do
+    items
+    |> Enum.map(fn x -> "- " <> x <> "\n" end)
   end
 
   def change_servings(%{input: input, content: content} = context) do

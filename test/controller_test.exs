@@ -4,7 +4,6 @@ defmodule ControllerTest do
 
   describe "run/1" do
     test "when passed 'Q', prints the quit message and leaves the context map unchanged." do
-
       initial_context = %{
         input: "Q",
         content: nil,
@@ -13,7 +12,7 @@ defmodule ControllerTest do
         io: FakeIO,
         prompt: "What would you like to do?",
         menu: ":welcome",
-        error: nil,
+        error: nil
       }
 
       updated_context = run(initial_context)

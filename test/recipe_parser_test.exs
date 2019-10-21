@@ -244,4 +244,22 @@ defmodule RecipeParserTest do
       assert change_servings(example_context) == transformed_context
     end
   end
+
+  describe "generate_bulleted_list/1" do
+    test "when passed a list, it will return a list formatted with dashes and newlines" do
+      example_ingredients = [
+        "2 cups water (approximately)",
+        "2 tablespoons water (additional if needed)"
+      ]
+
+      expected_output = [
+        "- 2 cups water (approximately)\n",
+        "- 2 tablespoons water (additional if needed)\n"
+      ]
+
+      output = generate_bulleted_list(example_ingredients)
+
+      assert output == expected_output
+    end
+  end
 end
