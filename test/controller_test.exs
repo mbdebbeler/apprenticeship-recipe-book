@@ -11,7 +11,7 @@ defmodule ControllerTest do
         view: :welcome,
         io: FakeIO,
         prompt: "What would you like to do?",
-        menu: ":welcome",
+        menu: :welcome,
         error: nil
       }
 
