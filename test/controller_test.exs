@@ -21,6 +21,25 @@ defmodule ControllerTest do
     end
   end
 
+  describe "run/2" do
+    test "can be passed a dummy UI and with the same API and not blow up" do
+      initial_context = %{
+        input: "Q",
+        content: nil,
+        header: "Welcome to Recipe Book!",
+        view: :welcome,
+        io: FakeIO,
+        prompt: "What would you like to do?",
+        menu: :welcome,
+        error: nil
+      }
+
+      updated_context = run(initial_context, FakeUI)
+
+      assert %{view: :exit} = updated_context
+    end
+  end
+
   describe "update_context/1" do
     test "when view is :index, updates prompt, header, content and menu" do
       initial_context = %{
@@ -28,7 +47,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :index,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -68,7 +87,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :welcome,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -101,7 +120,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :welcome,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -124,7 +143,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :welcome,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -142,7 +161,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :index,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -165,7 +184,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :index,
-        io: IO,
+        io: FakeIO,
         prompt: "Foo",
         menu: "Bar",
         error: nil,
@@ -183,7 +202,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :index,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -206,7 +225,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :view_recipe,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: "Bar",
         error: nil,
@@ -231,7 +250,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :view_recipe,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -264,7 +283,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :view_recipe,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -282,7 +301,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :view_recipe,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -305,7 +324,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :grocery_list,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -338,7 +357,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :grocery_list,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -359,7 +378,7 @@ defmodule ControllerTest do
         ],
         header: nil,
         view: :grocery_list,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -386,7 +405,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :grocery_list,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,
@@ -412,7 +431,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :index,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,

@@ -15,3 +15,13 @@ defmodule FakeIO do
   def write(io),
     do: io
 end
+
+defmodule FakeUI do
+  def get_input(context) do
+    context
+  end
+
+  def refresh_display(context) do
+    context
+  end
+end

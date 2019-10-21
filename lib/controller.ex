@@ -14,17 +14,19 @@ defmodule Controller do
     |> run()
   end
 
-  def run(%{input: "Q"} = context) do
+  def run(context, ui \\ CommandLineUI)
+
+  def run(%{input: "Q"} = context, ui) do
     context
     |> update_context()
-    |> CommandLineUI.refresh_display()
+    |> ui.refresh_display()
   end
 
-  def run(context) do
+  def run(context, ui) do
     context
     |> update_context()
-    |> CommandLineUI.refresh_display()
-    |> CommandLineUI.get_input()
+    |> ui.refresh_display()
+    |> ui.get_input()
     |> run()
   end
 
