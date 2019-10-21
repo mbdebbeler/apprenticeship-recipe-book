@@ -1,4 +1,4 @@
-defmodule UserInterface do
+defmodule CommandLineUI do
   def get_input(%{prompt: prompt, io: io} = context) do
     prompt
     |> io.gets()
@@ -16,25 +16,17 @@ defmodule UserInterface do
     String.capitalize(message)
   end
 
-  def display(message) do
-    message
-    |> IO.puts()
-  end
-
-  def display(%{io: io} = context, message) do
+  def display(message, %{io: io} = context) do
     message
     |> io.puts()
 
     context
   end
 
-  def line_break() do
-    display("\n")
+  def clear_screen(%{io: io} = context) do
+    context
+    |> io.write(IO.ANSI.home())
+    |> io.write(IO.ANSI.clear())
   end
 
-  def clear_screen(context) do
-    IO.write(IO.ANSI.home())
-    IO.write(IO.ANSI.clear())
-    context
-  end
 end

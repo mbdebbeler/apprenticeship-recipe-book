@@ -1,27 +1,24 @@
 defmodule ControllerTest do
   use ExUnit.Case
   import Controller
-  import ExUnit.CaptureIO
 
   describe "run/1" do
     test "when passed 'Q', prints the quit message and leaves the context map unchanged." do
-      quit_prompt = "\e[H\e[2JGoodbye!\n\n"
 
       initial_context = %{
         input: "Q",
         content: nil,
         header: "Welcome to Recipe Book!",
         view: :welcome,
-        io: IO,
+        io: FakeIO,
         prompt: "What would you like to do?",
-        menu: nil,
+        menu: ":welcome",
         error: nil,
-        last_input: nil
       }
 
-      output = fn -> run(initial_context) end
+      updated_context = run(initial_context)
 
-      assert capture_io(output) =~ quit_prompt
+      assert %{view: :exit} = updated_context
     end
   end
 
@@ -163,7 +160,7 @@ defmodule ControllerTest do
       assert %{view: :view_recipe} = updated_context
     end
 
-    test "in view :index, when passed valid input 'Q', returns nil" do
+    test "in view :index, when passed valid input 'Q', returns context with view :exit" do
       initial_context = %{
         input: "Q",
         content: nil,
@@ -178,7 +175,7 @@ defmodule ControllerTest do
 
       updated_context = fetch_content(initial_context)
 
-      assert nil == updated_context
+      assert %{view: :exit} = updated_context
     end
 
     test "in view :index, when passed invalid input '9', updates error message but not view" do
@@ -262,7 +259,7 @@ defmodule ControllerTest do
       assert %{view: :index} = updated_context
     end
 
-    test "in view :view_recipe, when passed valid input 'Q', returns nil" do
+    test "in view :view_recipe, when passed valid input 'Q', returns context with view :exit" do
       initial_context = %{
         input: "Q",
         content: nil,
@@ -277,7 +274,7 @@ defmodule ControllerTest do
 
       updated_context = fetch_content(initial_context)
 
-      assert nil == updated_context
+      assert %{view: :exit} = updated_context
     end
 
     test "in view :view_recipe, when passed invalid input '1', updates error but not view" do
@@ -336,7 +333,7 @@ defmodule ControllerTest do
       assert %{view: :index} = updated_context
     end
 
-    test "in view :grocery_list, when passed valid input 'Q', returns nil" do
+    test "in view :grocery_list, when passed valid input 'Q', returns context with view :exit" do
       initial_context = %{
         input: "Q",
         content: nil,
@@ -351,7 +348,7 @@ defmodule ControllerTest do
 
       updated_context = fetch_content(initial_context)
 
-      assert nil == updated_context
+      assert %{view: :exit} = updated_context
     end
 
     test "in view :grocery_list, when passed valid input '1', updates content but not view" do
