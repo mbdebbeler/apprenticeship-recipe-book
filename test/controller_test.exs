@@ -15,7 +15,7 @@ defmodule ControllerTest do
         error: nil
       }
 
-      updated_context = run(initial_context)
+      updated_context = run(initial_context, UI)
 
       assert %{view: :exit} = updated_context
     end
@@ -28,7 +28,7 @@ defmodule ControllerTest do
         content: nil,
         header: nil,
         view: :index,
-        io: IO,
+        io: FakeIO,
         prompt: nil,
         menu: nil,
         error: nil,

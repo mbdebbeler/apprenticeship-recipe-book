@@ -11,21 +11,21 @@ defmodule Controller do
       error: nil,
       last_input: nil
     }
-    |> run()
+    |> run(UI)
   end
 
-  def run(%{input: "Q"} = context) do
+  def run(%{input: "Q"} = context, UI = CommandLineUI) do
     context
     |> update_context()
-    |> CommandLineUI.refresh_display()
+    |> UI.refresh_display()
   end
 
-  def run(context) do
+  def run(context, UI = CommandLineUI) do
     context
     |> update_context()
-    |> CommandLineUI.refresh_display()
-    |> CommandLineUI.get_input()
-    |> run()
+    |> UI.refresh_display()
+    |> UI.get_input()
+    |> run(UI)
   end
 
   def update_context(context) do
