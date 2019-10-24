@@ -11,6 +11,14 @@ Rootsymbol document.
 
 document -> values : '$1'.
 
+section -> section_start section_end : {'$1', []}.
+section -> section_start section_contents section_end : {'$1', '$2'}.
+
+section_contents -> section : ['$1'].
+section_contents -> section section_contents : ['$1'|'$2'].
+section_contents -> chars section_contents : ['$1'|'$2'].
+section_contents -> word : ['$1'].
+
 values -> value : ['$1'].
 values -> value values : ['$1'] ++ '$2'.
 
@@ -24,13 +32,6 @@ value -> section_end : {section_end, unwrap('$1')}.
 value -> new_line : {new_line, unwrap('$1')}.
 value -> section : '$1'.
 
-section -> section_start section_end : {'$1', []}.
-section -> section_start section_contents section_end : {'$1', '$2'}.
-
-section_contents -> section : ['$1'].
-section_contents -> section section_contents : ['$1'|'$2'].
-section_contents -> chars section_contents : ['$1'|'$2'].
-section_contents -> chars : ['$1'].
 
 chars -> char chars : ['$1'|'$2'].
 chars -> char : '$1'.
