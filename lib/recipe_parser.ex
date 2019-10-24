@@ -80,7 +80,7 @@ defmodule RecipeParser do
 
   def is_after_ingredients([recipe_line | remaining_lines], ingredients_list) do
     case recipe_line do
-      "Ingredients:" ->
+      "INGREDIENTS" ->
         remaining_lines
 
       _ ->
