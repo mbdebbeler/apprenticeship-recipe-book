@@ -6,7 +6,7 @@ SECTION_START = SERVESServes|INGREDIENTS|INSTRUCTIONS|WHY|BEFORE
 SECTION_END  = (\n\n)
 WORD = (<=\s|)[a-zA-Z]+(=\s|)
 BRACKET = [\[\]]
-CHARACTER = [\"\-\/\@\#\:\;\,\.\'{}\(\)\[\]&\|\*]
+CHARACTER = [\"\-\/\@\#\:\;\,\.\'{}\(\)\[\]&\|\*\!]
 WHITESPACE = [\s\t\r]
 NEW_LINE  = [\n]
 
