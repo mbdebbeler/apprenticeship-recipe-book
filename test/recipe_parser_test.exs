@@ -2,12 +2,42 @@ defmodule RecipeParserTest do
   use ExUnit.Case
   import RecipeParser
 
+  describe "generate_recipe_map/0" do
+    output = generate_recipe_map()
+
+    expected_output = %{"Best Chicken Stew" => "recipes/best_chicken_stew.txt", "Black Bean Soup" => "recipes/black_bean_soup.txt", "Cauliflower Soup" => "recipes/cauliflower_soup.txt", "Chicken Caesar Salad" => "recipes/chicken_caesar_salad.txt", "Esquites" => "recipes/esquites.txt", "Foolproof Pie Crust" => "recipes/foolproof_pie_crust.txt", "Mujaddara" => "recipes/mujaddara.txt", "Radicchio And Grapefruit Salad" => "recipes/radicchio_and_grapefruit_salad.txt", "Skillet Charred Green Beans" => "recipes/skillet_charred_green_beans.txt", "Tagliatelle With Artichokes" => "recipes/tagliatelle_with_artichokes.txt"}
+
+    assert output == expected_output
+  end
+
+  describe "fetch_list_of_recipe_files/1" do
+    test "returns a List of of all the recipes in the recipes file" do
+      filepath = "./recipes/*.txt"
+      output = fetch_list_of_recipe_files(filepath)
+
+      expected_output = ["recipes/best_chicken_stew.txt", "recipes/black_bean_soup.txt", "recipes/cauliflower_soup.txt", "recipes/chicken_caesar_salad.txt", "recipes/esquites.txt", "recipes/foolproof_pie_crust.txt", "recipes/mujaddara.txt", "recipes/radicchio_and_grapefruit_salad.txt", "recipes/skillet_charred_green_beans.txt", "recipes/tagliatelle_with_artichokes.txt"]
+
+      assert output == expected_output
+    end
+  end
+
+  describe "parse_list_of_recipe_names/1" do
+    test "returns a list of file names formatted as capitalized English titles" do
+      filepath = "./recipes/*.txt"
+      output = parse_list_of_recipe_names(filepath)
+
+      expected_output = ["Best Chicken Stew", "Black Bean Soup", "Cauliflower Soup", "Chicken Caesar Salad", "Esquites", "Foolproof Pie Crust", "Mujaddara", "Radicchio And Grapefruit Salad", "Skillet Charred Green Beans", "Tagliatelle With Artichokes"]
+
+      assert output == expected_output
+    end
+  end
+
   describe "read_file/1" do
     test "accepts string filepath and returns string of file contents" do
-      filepath = './recipes/ice_cubes.txt'
+      filepath = './recipes/mujaddara.txt'
 
       expected_output =
-        "Title:\nIce Cubes\n\nIngredients:\n2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\nDirections:\n- Empty any ice cubes that are left in the trays into the bin.\n- Take the trays over to the sink and fill them with water. (Tip: hot water will freeze faster and the cubes will be more clear.)\n- Place the water-filled ice trays back in the freezer.\n- Replace the ice bin if you had to remove it.\n- Shut the door to the freezer.\n- Be sure to leave for around 4-6 hours at least to make sure it is frozen.\n"
+        "Rice and Lentils with Crispy Onions (Mujaddara)\nSERVESServes 4 to 6\n\nWHY THIS RECIPE WORKS\nMujaddara, the rice and beans of the Middle East, is a hearty one-dish vegetarian rice and lentil pilaf containing large brown or green lentils and crispy fried onion strings. For the pilaf, we found that precooking the lentils and soaking the rice in hot water before combining them ensured that both components cooked evenly. We pare down the typically fussy process of batch-frying onions in several cups of oil to a single batch of onions fried in just 1 1/2 cups of oil. The trick: removing a good bit of the onion water before frying by tossing them with salt, microwaving them for 5 minutes, and drying them thoroughly.\n\nINGREDIENTS\nYOGURT SAUCE\n1 cup plain whole-milk yogurt\n2 tablespoons lemon juice\n1/2 teaspoon minced garlic\n1/2 teaspoon salt\nRICE AND LENTILS\n8 1/2 ounces (1 1/4 cups) green or brown lentils, picked over and rinsed\nSalt and pepper\n1 1/4 cups basmati rice\n2 cups Crispy Onions\n3 garlic cloves, minced\n1 teaspoon ground coriander\n1 teaspoon ground cumin\n1/2 teaspoon ground cinnamon\n1/2 teaspoon ground allspice\n1/8 teaspoon cayenne pepper\n1 teaspoon sugar\n3 tablespoons minced fresh cilantro\n*BEFORE YOU BEGIN\nDo not substitute smaller French lentils for the green or brown lentils. When preparing the Crispy Onions (see related content), be sure to reserve 3 tablespoons of the onion cooking oil for cooking the rice and lentils.\n\n1\nINSTRUCTIONS\nFOR THE YOGURT SAUCE: Whisk all ingredients together in bowl. Refrigerate while preparing rice and lentils.\n\n2\nFOR THE RICE AND LENTILS: Bring lentils, 4 cups water, and 1 teaspoon salt to boil in medium saucepan over high heat. Reduce heat to low and cook until lentils are tender, 15 to 17 minutes. Drain and set aside. While lentils cook, place rice in medium bowl and cover by 2 inches with hot tap water; let stand for 15 minutes.\n\n3\nUsing your hands, gently swish rice grains to release excess starch. Carefully pour off water, leaving rice in bowl. Add cold tap water to rice and pour off water. Repeat adding and pouring off cold tap water 4 to 5 times, until water runs almost clear. Drain rice in fine-mesh strainer.\n\n4\nHeat reserved onion oil, garlic, coriander, cumin, cinnamon, allspice, 1/4 teaspoon pepper, and cayenne in Dutch oven over medium heat until fragrant, about 2 minutes. Add rice and cook, stirring occasionally, until edges of rice begin to turn translucent, about 3 minutes. Add 2 1/4 cups water, sugar, and 1 teaspoon salt and bring to boil. Stir in lentils, reduce heat to low, cover, and cook until all liquid is absorbed, about 12 minutes.\n\n5\nOff heat, remove lid, fold dish towel in half, and place over pot; replace lid. Let stand for 10 minutes. Fluff rice and lentils with fork and stir in cilantro and half of crispy onions. Transfer to serving platter, top with remaining crispy onions, and serve, passing yogurt sauce separately.\n"
 
       output = read_file(filepath)
 
@@ -29,7 +59,7 @@ defmodule RecipeParserTest do
         "foo",
         "bar",
         "",
-        "Ingredients:",
+        "INGREDIENTS",
         "baz",
         "zab",
         "",
@@ -179,6 +209,24 @@ defmodule RecipeParserTest do
       }
 
       assert change_servings(example_context) == transformed_context
+    end
+  end
+
+  describe "generate_bulleted_list/1" do
+    test "when passed a list, it will return a list formatted with dashes and newlines" do
+      example_ingredients = [
+        "2 cups water (approximately)",
+        "2 tablespoons water (additional if needed)"
+      ]
+
+      expected_output = [
+        "- 2 cups water (approximately)\n",
+        "- 2 tablespoons water (additional if needed)\n"
+      ]
+
+      output = generate_bulleted_list(example_ingredients)
+
+      assert output == expected_output
     end
   end
 end

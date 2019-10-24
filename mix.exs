@@ -5,7 +5,7 @@ defmodule Controller.MixProject do
     [
       app: :recipe_book,
       version: "0.1.0",
-      elixir: "~> 1.9",
+      elixir: "~> 1.9.2",
       start_permanent: Mix.env() == :prod,
       escript: [main_module: Controller],
       deps: deps()

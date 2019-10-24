@@ -5,12 +5,43 @@ defmodule RecipeParser do
     File.read!(Path.expand(filepath))
   end
 
+  def generate_recipe_map do
+    filepath = "./recipes/*.txt"
+    recipe_files = fetch_list_of_recipe_files(filepath)
+    recipe_names = parse_list_of_recipe_names(filepath)
+    Enum.zip(recipe_names, recipe_files) |> Enum.into(%{})
+  end
+
+  def fetch_list_of_recipe_files(filepath) do
+    Path.wildcard(filepath)
+  end
+
+  def parse_list_of_recipe_names(filepath) do
+    filepath
+    |> fetch_list_of_recipe_files
+    |> Enum.map(fn x -> Path.basename(x, ".txt") end)
+    |> Enum.map(fn x -> Regex.replace(~r/_/, x, " ") end)
+    |> Enum.map(fn x -> capitalize_per_word(x) end)
+  end
+
+  defp capitalize_per_word(string) do
+    String.split(string)
+    |> Enum.map(&String.capitalize/1)
+    |> Enum.join(" ")
+  end
+
   def parse_grocery_list(filepath) do
     filepath
     |> read_file
     |> split_file_by_lines
     |> is_after_ingredients
     |> is_before_section_break
+    |> generate_bulleted_list
+  end
+
+  def generate_bulleted_list(items) do
+    items
+    |> Enum.map(fn x -> "- " <> x <> "\n" end)
   end
 
   def change_servings(%{input: input, content: content} = context) do
@@ -49,7 +80,7 @@ defmodule RecipeParser do
 
   def is_after_ingredients([recipe_line | remaining_lines], ingredients_list) do
     case recipe_line do
-      "Ingredients:" ->
+      "INGREDIENTS" ->
         remaining_lines
 
       _ ->

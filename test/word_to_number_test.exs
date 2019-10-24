@@ -29,5 +29,4 @@ defmodule WordToNumberTest do
       assert output == expected_output
     end
   end
-
 end
