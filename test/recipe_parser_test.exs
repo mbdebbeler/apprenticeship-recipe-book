@@ -2,10 +2,102 @@ defmodule RecipeParserTest do
   use ExUnit.Case
   import RecipeParser
 
+  describe "parse_tokens/1" do
+    test "returns a %Recipe{} with title, servings, ingredients and directions" do
+      filepath = './recipes/mujaddara.txt'
+      output = parse_tokens(filepath)
+
+      assert %{title: "Rice and Lentils with Crispy Onions (Mujaddara)"} = output
+    end
+  end
+
+
+  describe "parse_title/1" do
+    test "filters tokens, joins them into a string, updates the recipe struct" do
+      tokens = [
+        {:int, 1, 2},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'cups'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'water'},
+        {:whitespace, 1, ' '},
+        {:char, 1, '('},
+        {:word, 1, 'approximately'},
+        {:char, 1, ')'},
+        {:new_line, 1, '\n'},
+        {:int, 2, 2},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'tablespoons'},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'water'},
+        {:whitespace, 2, ' '},
+        {:char, 2, '('},
+        {:word, 2, 'additional'},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'if'},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'needed'},
+        {:char, 2, ')'},
+        {:section_end, 2, '\n\n'}
+      ]
+
+      output = parse_title(tokens)
+      expected_output = "2 cups water (approximately)"
+      assert output == expected_output
+    end
+  end
+
+  describe "filter_tokens_by_line/2" do
+    test "returns only tokens where line is 1" do
+      tokens = [
+        {:int, 1, 2},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'cups'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'water'},
+        {:whitespace, 1, ' '},
+        {:char, 1, '('},
+        {:word, 1, 'approximately'},
+        {:char, 1, ')'},
+        {:new_line, 1, '\n'},
+        {:int, 2, 2},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'tablespoons'},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'water'},
+        {:whitespace, 2, ' '},
+        {:char, 2, '('},
+        {:word, 2, 'additional'},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'if'},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'needed'},
+        {:char, 2, ')'},
+        {:section_end, 2, '\n\n'}
+      ]
+      target_line = 1
+
+      output = filter_tokens_by_line(tokens, target_line)
+      rejected_token = {:word, 2, 'additional'}
+      refute Enum.member?(output, rejected_token)
+    end
+  end
+
   describe "generate_recipe_map/0" do
     output = generate_recipe_map()
 
-    expected_output = %{"Best Chicken Stew" => "recipes/best_chicken_stew.txt", "Black Bean Soup" => "recipes/black_bean_soup.txt", "Cauliflower Soup" => "recipes/cauliflower_soup.txt", "Chicken Caesar Salad" => "recipes/chicken_caesar_salad.txt", "Esquites" => "recipes/esquites.txt", "Foolproof Pie Crust" => "recipes/foolproof_pie_crust.txt", "Mujaddara" => "recipes/mujaddara.txt", "Radicchio And Grapefruit Salad" => "recipes/radicchio_and_grapefruit_salad.txt", "Skillet Charred Green Beans" => "recipes/skillet_charred_green_beans.txt", "Tagliatelle With Artichokes" => "recipes/tagliatelle_with_artichokes.txt"}
+    expected_output = %{
+      "Best Chicken Stew" => "recipes/best_chicken_stew.txt",
+      "Black Bean Soup" => "recipes/black_bean_soup.txt",
+      "Cauliflower Soup" => "recipes/cauliflower_soup.txt",
+      "Chicken Caesar Salad" => "recipes/chicken_caesar_salad.txt",
+      "Esquites" => "recipes/esquites.txt",
+      "Foolproof Pie Crust" => "recipes/foolproof_pie_crust.txt",
+      "Mujaddara" => "recipes/mujaddara.txt",
+      "Radicchio And Grapefruit Salad" => "recipes/radicchio_and_grapefruit_salad.txt",
+      "Skillet Charred Green Beans" => "recipes/skillet_charred_green_beans.txt",
+      "Tagliatelle With Artichokes" => "recipes/tagliatelle_with_artichokes.txt"
+    }
 
     assert output == expected_output
   end
@@ -15,7 +107,18 @@ defmodule RecipeParserTest do
       filepath = "./recipes/*.txt"
       output = fetch_list_of_recipe_files(filepath)
 
-      expected_output = ["recipes/best_chicken_stew.txt", "recipes/black_bean_soup.txt", "recipes/cauliflower_soup.txt", "recipes/chicken_caesar_salad.txt", "recipes/esquites.txt", "recipes/foolproof_pie_crust.txt", "recipes/mujaddara.txt", "recipes/radicchio_and_grapefruit_salad.txt", "recipes/skillet_charred_green_beans.txt", "recipes/tagliatelle_with_artichokes.txt"]
+      expected_output = [
+        "recipes/best_chicken_stew.txt",
+        "recipes/black_bean_soup.txt",
+        "recipes/cauliflower_soup.txt",
+        "recipes/chicken_caesar_salad.txt",
+        "recipes/esquites.txt",
+        "recipes/foolproof_pie_crust.txt",
+        "recipes/mujaddara.txt",
+        "recipes/radicchio_and_grapefruit_salad.txt",
+        "recipes/skillet_charred_green_beans.txt",
+        "recipes/tagliatelle_with_artichokes.txt"
+      ]
 
       assert output == expected_output
     end
@@ -26,7 +129,18 @@ defmodule RecipeParserTest do
       filepath = "./recipes/*.txt"
       output = parse_list_of_recipe_names(filepath)
 
-      expected_output = ["Best Chicken Stew", "Black Bean Soup", "Cauliflower Soup", "Chicken Caesar Salad", "Esquites", "Foolproof Pie Crust", "Mujaddara", "Radicchio And Grapefruit Salad", "Skillet Charred Green Beans", "Tagliatelle With Artichokes"]
+      expected_output = [
+        "Best Chicken Stew",
+        "Black Bean Soup",
+        "Cauliflower Soup",
+        "Chicken Caesar Salad",
+        "Esquites",
+        "Foolproof Pie Crust",
+        "Mujaddara",
+        "Radicchio And Grapefruit Salad",
+        "Skillet Charred Green Beans",
+        "Tagliatelle With Artichokes"
+      ]
 
       assert output == expected_output
     end

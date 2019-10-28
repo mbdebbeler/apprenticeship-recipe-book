@@ -5,6 +5,48 @@ defmodule RecipeParser do
     File.read!(Path.expand(filepath))
   end
 
+  def parse_tokens(filepath) do
+    tokens =
+      read_file(filepath)
+      |> Parser.lex()
+
+    title = parse_title(tokens)
+
+    %Recipe{title: title}
+  end
+
+  def parse_title(tokens) do
+    target_line = 1
+
+    tokens
+    |> filter_tokens_by_line(target_line)
+    |> trim_newlines()
+    |> trim_section_start()
+    |> trim_section_end()
+    |> unwrap()
+    |> Enum.join()
+  end
+
+  def filter_tokens_by_line(tokens, target_line) do
+    Enum.filter(tokens, fn {_token, line, _value} -> line == target_line end)
+  end
+
+  def trim_newlines(tokens) do
+    Enum.reject(tokens, fn {token, _line, _value} -> token == :new_line end)
+  end
+
+  def trim_section_start(tokens) do
+    Enum.reject(tokens, fn {token, _line, _value} -> token == :section_start end)
+  end
+
+  def trim_section_end(tokens) do
+    Enum.reject(tokens, fn {token, _line, _value} -> token == :section_end end)
+  end
+
+  def unwrap(tokens) do
+    Enum.map(tokens, fn {_token, _line, value} -> value end)
+  end
+
   def generate_recipe_map do
     filepath = "./recipes/*.txt"
     recipe_files = fetch_list_of_recipe_files(filepath)
