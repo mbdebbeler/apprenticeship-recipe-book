@@ -1,4 +1,4 @@
--file("/usr/local/Cellar/erlang/22.0.7/lib/erlang/lib/parsetools-2.1.8/include/leexinc.hrl", 0).
+-file("/usr/local/Cellar/erlang/22.1.4/lib/erlang/lib/parsetools-2.1.8/include/leexinc.hrl", 0).
 %% The source of this file is part of leex distribution, as such it
 %% has the same Copyright as the other files in the leex
 %% distribution. The Copyright is defined in the accompanying file
@@ -14,7 +14,7 @@
 %% User code. This is placed here to allow extra attributes.
 -file("src/recipe_lexer.xrl", 25).
 
--file("/usr/local/Cellar/erlang/22.0.7/lib/erlang/lib/parsetools-2.1.8/include/leexinc.hrl", 14).
+-file("/usr/local/Cellar/erlang/22.1.4/lib/erlang/lib/parsetools-2.1.8/include/leexinc.hrl", 14).
 
 format_error({illegal,S}) -> ["illegal characters ",io_lib:write_string(S)];
 format_error({user,S}) -> S.
@@ -414,11 +414,7 @@ yystate(44, [10|Ics], Line, Tlen, Action, Alen) ->
     yystate(32, Ics, Line+1, Tlen+1, Action, Alen);
 yystate(44, [9|Ics], Line, Tlen, Action, Alen) ->
     yystate(48, Ics, Line, Tlen+1, Action, Alen);
-yystate(44, [C|Ics], Line, Tlen, Action, Alen) when C >= 33, C =< 35 ->
-    yystate(36, Ics, Line, Tlen+1, Action, Alen);
-yystate(44, [C|Ics], Line, Tlen, Action, Alen) when C >= 38, C =< 42 ->
-    yystate(36, Ics, Line, Tlen+1, Action, Alen);
-yystate(44, [C|Ics], Line, Tlen, Action, Alen) when C >= 44, C =< 47 ->
+yystate(44, [C|Ics], Line, Tlen, Action, Alen) when C >= 33, C =< 47 ->
     yystate(36, Ics, Line, Tlen+1, Action, Alen);
 yystate(44, [C|Ics], Line, Tlen, Action, Alen) when C >= 49, C =< 57 ->
     yystate(0, Ics, Line, Tlen+1, Action, Alen);
@@ -945,4 +941,4 @@ yyaction_7(TokenChars, TokenLine) ->
 yyaction_8(TokenChars, TokenLine) ->
      { token, { list_to_atom (TokenChars), TokenLine, TokenChars } } .
 
--file("/usr/local/Cellar/erlang/22.0.7/lib/erlang/lib/parsetools-2.1.8/include/leexinc.hrl", 313).
+-file("/usr/local/Cellar/erlang/22.1.4/lib/erlang/lib/parsetools-2.1.8/include/leexinc.hrl", 313).
