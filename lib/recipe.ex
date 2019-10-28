@@ -1,3 +1,3 @@
 defmodule Recipe do
-  defstruct [:title, :ingredients, :directions]
+  defstruct [:title, :servings, :ingredients, :directions]
 end

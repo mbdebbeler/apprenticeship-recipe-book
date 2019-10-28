@@ -8,9 +8,57 @@ defmodule RecipeParserTest do
       output = parse_tokens(filepath)
 
       assert %{title: "Rice and Lentils with Crispy Onions (Mujaddara)"} = output
+      assert %{servings: %{min: 4, max: 6}} = output
     end
   end
 
+  describe "parse_directions/1" do
+     test "returns a List of directions, each stored in a map that contains :display_index and :direction" do
+       filepath = './recipes/mujaddara.txt'
+       tokens = Parser.lex(read_file(filepath))
+
+       output = parse_directions(tokens)
+       expected_output = %{display_index: "Before you start:", direction: "Direction"}
+
+       assert output == expected_output
+     end
+  end
+
+  describe "parse_servings/2" do
+    test "returns a map of with :min and :max fields" do
+            tokens = [
+        {:word, 1, 'Rice'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'and'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'Lentils'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'with'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'Crispy'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'Onions'},
+        {:whitespace, 1, ' '},
+        {:char, 1, '('},
+        {:word, 1, 'Mujaddara'},
+        {:char, 1, ')'},
+        {:new_line, 1, '\n'},
+        {:section_start, 2, 'SERVESServes'},
+        {:whitespace, 2, ' '},
+        {:int, 2, 4},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'to'},
+        {:whitespace, 2, ' '},
+        {:int, 2, 6},
+        {:section_end, 2, '\n\n'}
+      ]
+
+      output = parse_servings(tokens)
+      expected_output = %{min: 4, max: 6}
+
+      assert expected_output == output
+    end
+  end
 
   describe "parse_title/1" do
     test "filters tokens, joins them into a string, updates the recipe struct" do
@@ -75,6 +123,7 @@ defmodule RecipeParserTest do
         {:char, 2, ')'},
         {:section_end, 2, '\n\n'}
       ]
+
       target_line = 1
 
       output = filter_tokens_by_line(tokens, target_line)
