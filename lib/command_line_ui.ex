@@ -25,6 +25,15 @@ defmodule CommandLineUI do
     String.capitalize(message)
   end
 
+  defp prepare_next_screen(%{error: error, menu: menu, header: header, content: %Recipe{} = content}) do
+    formatted_content = content
+    |> CommandLineFormatter.format_recipe()
+
+    [header, formatted_content, menu, error]
+    |> Enum.reject(fn x -> x == nil end)
+    |> Enum.join("\n")
+  end
+
   defp prepare_next_screen(%{error: error, menu: menu, header: header, content: content}) do
     [header, content, menu, error]
     |> Enum.reject(fn x -> x == nil end)

@@ -6,7 +6,7 @@ defmodule ParserTest do
     test "when passed a string of alphanumeric characters, returns a flat list of tokens" do
       recipe_string = "Empty any ice cubes that are left in the trays into the bin"
 
-      output = Parser.simple_lex(recipe_string)
+      output = simple_lex(recipe_string)
 
       expected_output = [
         {:word, 1, 'Empty'},
@@ -41,7 +41,7 @@ defmodule ParserTest do
 
     test "when passed a string that contains non-alphanumeric characters, returns a flat list of tokens" do
       recipe_string = "Empty @ any ! ice -/@#:;,.'{}()[]&|*"
-      output = Parser.simple_lex(recipe_string)
+      output = simple_lex(recipe_string)
 
       expected_output = [
         {:word, 1, 'Empty'},
@@ -81,7 +81,7 @@ defmodule ParserTest do
       recipe_string =
         "2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\n"
 
-      output = Parser.simple_lex(recipe_string)
+      output = simple_lex(recipe_string)
 
       expected_output = [
         {:int, 1, 2},
@@ -115,14 +115,14 @@ defmodule ParserTest do
 
     test "handles section_start keywords" do
       recipe_string = "INGREDIENTS\n2 cups water (approximately)\n"
-      output = Parser.simple_lex(recipe_string)
+      output = simple_lex(recipe_string)
       expected_output = {:section_start, 1, 'INGREDIENTS'}
       assert Enum.member?(output, expected_output)
     end
 
     test "handles whitespace" do
       recipe_string = "2 cups water (approximately)"
-      output = Parser.simple_lex(recipe_string)
+      output = simple_lex(recipe_string)
       expected_output = {:whitespace, 1, ' '}
       assert Enum.member?(output, expected_output)
     end
@@ -131,7 +131,7 @@ defmodule ParserTest do
       recipe_string =
         "2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\n"
 
-      output = Parser.simple_lex(recipe_string)
+      output = simple_lex(recipe_string)
       expected_output = {:int, 2, 2}
       assert Enum.member?(output, expected_output)
     end
@@ -140,20 +140,20 @@ defmodule ParserTest do
       recipe_string =
         "2 1/2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\n"
 
-      output = Parser.simple_lex(recipe_string)
+      output = simple_lex(recipe_string)
       expected_output = {:fraction, 1, '1/2'}
       assert Enum.member?(output, expected_output)
     end
 
     test "returns an error indicating the line number when passed an illegal character" do
       recipe_string = "2 ½ cups water (approximately)\n"
-      output = Parser.simple_lex(recipe_string)
+      output = simple_lex(recipe_string)
       assert output == {1, :recipe_lexer, {:illegal, [189]}}
     end
 
     test "returns and empty list when passed an empty string" do
       recipe_string = ""
-      output = Parser.simple_lex(recipe_string)
+      output = simple_lex(recipe_string)
       expected_output = []
       assert output == expected_output
     end
@@ -163,7 +163,7 @@ defmodule ParserTest do
     test "when passed a string of alphanumeric characters, returns a flat list of tokens" do
       recipe_string = "Empty any ice cubes that are left in the trays into the bin"
 
-      output = Parser.lex(recipe_string)
+      output = lex(recipe_string)
 
       expected_output = [
         {:word, 1, 'Empty'},
@@ -198,7 +198,7 @@ defmodule ParserTest do
 
     test "when passed a string that contains non-alphanumeric characters, returns a flat list of tokens" do
       recipe_string = "Empty @ any ! ice -/@#:;,.'{}()[]&|*"
-      output = Parser.lex(recipe_string)
+      output = lex(recipe_string)
 
       expected_output = [
         {:word, 1, 'Empty'},
@@ -238,7 +238,7 @@ defmodule ParserTest do
       recipe_string =
         "2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\n"
 
-      output = Parser.lex(recipe_string)
+      output = lex(recipe_string)
 
       expected_output = [
         {:int, 1, 2},
@@ -272,14 +272,14 @@ defmodule ParserTest do
 
     test "handles section_start keywords" do
       recipe_string = "INGREDIENTS\n2 cups water (approximately)\n"
-      output = Parser.lex(recipe_string)
+      output = lex(recipe_string)
       expected_output = {:section_start, 1, 'INGREDIENTS'}
       assert Enum.member?(output, expected_output)
     end
 
     test "handles whitespace" do
       recipe_string = "2 cups water (approximately)"
-      output = Parser.lex(recipe_string)
+      output = lex(recipe_string)
       expected_output = {:whitespace, 1, ' '}
       assert Enum.member?(output, expected_output)
     end
@@ -288,7 +288,7 @@ defmodule ParserTest do
       recipe_string =
         "2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\n"
 
-      output = Parser.lex(recipe_string)
+      output = lex(recipe_string)
       expected_output = {:int, 2, 2}
       assert Enum.member?(output, expected_output)
     end
@@ -297,26 +297,31 @@ defmodule ParserTest do
       recipe_string =
         "2 1/2 cups water (approximately)\n2 tablespoons water (additional if needed)\n\n"
 
-      output = Parser.lex(recipe_string)
+      output = lex(recipe_string)
       expected_output = {:fraction, 1, '1/2'}
       assert Enum.member?(output, expected_output)
     end
 
+    test "tokenizes upcased words differently than downcased words" do
+      recipe_string =
+        "INGREDIENTS: YOGURT SAUCE 1 cup whole milk yogurt"
+
+      output = lex(recipe_string)
+      expected_upcase_word = {:upcase_word, 1, 'YOGURT'}
+      expected_word = {:word, 1, 'cup'}
+      expected_section_start = {:section_start, 1, 'INGREDIENTS'}
+
+      assert Enum.member?(output, expected_word)
+      assert Enum.member?(output, expected_section_start)
+      assert Enum.member?(output, expected_upcase_word)
+    end
+
     test "returns and empty list when passed an empty string" do
       recipe_string = ""
-      output = Parser.lex(recipe_string)
+      output = lex(recipe_string)
       expected_output = []
       assert output == expected_output
     end
   end
 
-  describe "parse/1" do
-    test "when passed a string of a .txt recipe file, returns an abstract syntax tree." do
-      recipe = RecipeParser.read_file('recipes/esquites.txt')
-
-      output = parse(recipe)
-
-      assert is_list(output)
-    end
-  end
 end

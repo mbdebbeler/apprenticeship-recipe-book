@@ -1,4 +1,5 @@
 defmodule RecipeParser do
+  
   def read_file(nil), do: Messages.get_prompt(:not_found)
 
   def read_file(filepath) do
@@ -13,8 +14,9 @@ defmodule RecipeParser do
     title = parse_title(tokens)
     servings = parse_servings(tokens)
     directions = parse_directions(tokens)
+    ingredients = parse_ingredients(tokens)
 
-    %Recipe{title: title, servings: servings, directions: directions}
+    %Recipe{title: title, servings: servings, directions: directions, ingredients: ingredients}
   end
 
   def parse_title(tokens) do
@@ -47,7 +49,11 @@ defmodule RecipeParser do
 
     tokens
     |> filter_tokens_by_range(range)
-    |> handle_sub_recipe()
+    |> trim_newlines()
+    |> trim_section_start()
+    |> trim_section_end()
+    |> chunk_by_same_line()
+    |> join_each_line()
   end
 
   def parse_directions(tokens) do
@@ -63,14 +69,6 @@ defmodule RecipeParser do
     |> join_each_line()
     |> map_each_direction()
     |> check_display_index()
-  end
-
-  defp handle_sub_recipe(tokens) do
-
-
-  end
-
-  defp has_sub_recipe?() do
   end
 
   defp check_display_index(direction_list) do

@@ -18,24 +18,24 @@ defmodule RecipeParserTest do
   end
 
   describe "parse_ingredients/1" do
-     test "when there are sublists, returns a List of Lists of %Ingredient{} structs, each with fields :quantity, :context" do
-       filepath = './recipes/esquites.txt'
-       tokens = Parser.lex(read_file(filepath))
-
-       output = parse_ingredients(tokens)
-       first_expected_ingredient = %Ingredient{quantity: 3, context: "tablespoons lime juice, plus extra for seasoning (2 limes)"}
-
-       assert Enum.member?(output, first_expected_ingredient)
-     end
-
-     test "when there are no sublists, returns a List of %Ingredient{} structs, each with fields :quantity, :context" do
+     test "when there are sublists, returns a List of ingredients with subrecipe titles included in list" do
        filepath = './recipes/mujaddara.txt'
        tokens = Parser.lex(read_file(filepath))
 
        output = parse_ingredients(tokens)
-       expected_list_of_subrecipes = [%Recipe{title: "YOGURT SAUCE", ingredients: [%Ingredient{quantity: 1, context: "cup whole milk yogurt"}]}]
+       first_expected_ingredient = "YOGURT SAUCE"
 
-       assert Enum.member?(output, expected_list_of_subrecipes)
+       assert Enum.member?(output, first_expected_ingredient)
+     end
+
+     test "when there are no sublists, returns a List of ingredients" do
+       filepath = './recipes/esquites.txt'
+       tokens = Parser.lex(read_file(filepath))
+
+       output = parse_ingredients(tokens)
+       first_expected_ingredient = "3 tablespoons lime juice, plus extra for seasoning (2 limes)"
+
+       assert Enum.member?(output, first_expected_ingredient)
      end
   end
 
