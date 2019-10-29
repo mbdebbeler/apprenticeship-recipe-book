@@ -12,10 +12,9 @@ defmodule RecipeParser do
 
     title = parse_title(tokens)
     servings = parse_servings(tokens)
-    # ingredients = parse_ingredients(tokens)
-    # directions = parse_directions(tokens)
+    directions = parse_directions(tokens)
 
-    %Recipe{title: title, servings: servings}
+    %Recipe{title: title, servings: servings, directions: directions}
   end
 
   def parse_title(tokens) do
@@ -43,6 +42,14 @@ defmodule RecipeParser do
     |> set_max_and_min()
   end
 
+  def parse_ingredients(tokens) do
+    range = tokens |> find_ingredients_range()
+
+    tokens
+    |> filter_tokens_by_range(range)
+    |> handle_sub_recipe()
+  end
+
   def parse_directions(tokens) do
     range = tokens |> find_directions_range()
 
@@ -52,60 +59,111 @@ defmodule RecipeParser do
     |> trim_section_start()
     |> trim_section_end()
     |> reject_integers()
-    # chunk by same lines, join them, make them into a list of maps, make the first one say "before you start"
+    |> chunk_by_same_line()
+    |> join_each_line()
+    |> map_each_direction()
+    |> check_display_index()
   end
 
-  def find_directions_range(tokens) do
+  defp handle_sub_recipe(tokens) do
+
+
+  end
+
+  defp has_sub_recipe?() do
+  end
+
+  defp check_display_index(direction_list) do
+    Enum.map(direction_list, fn(direction_map) ->
+        correct_first_display_index(direction_map)
+    end)
+  end
+
+  defp correct_first_display_index(%{direction: _direction, display_index: 0} = direction) do
+    Map.put(direction, :display_index, "Before you start: ")
+  end
+
+  defp correct_first_display_index(direction) do
+    direction
+  end
+
+  defp map_each_direction(direction_list) do
+    direction_list
+    |> Enum.with_index()
+    |> Enum.map(fn({direction, index}) ->
+      %{direction: direction, display_index: index}
+     end)
+  end
+
+  defp join_each_line(token_list) do
+    Enum.map(token_list, fn(token) -> Enum.join(unwrap(token)) end)
+  end
+
+  defp chunk_by_same_line(tokens) do
+    Enum.chunk_by(tokens, fn{_token, line, _value} -> line end)
+  end
+
+  defp find_directions_range(tokens) do
     first_line = tokens |> filter_section_starts() |> filter_directions_header |> get_line_number
     last_line = [List.last(tokens)] |> get_line_number
     [first_line+1, last_line]
   end
 
-  def filter_section_starts(tokens) do
-    Enum.filter(tokens, fn {token, _line, value} -> :section_start == token end)
+  defp find_ingredients_range(tokens) do
+    first_line = tokens |> filter_section_starts() |> filter_ingredients_header |> get_line_number
+    last_line = tokens |> filter_section_starts() |> filter_directions_header |> get_line_number
+    [first_line+1, last_line-1]
   end
 
-  def filter_directions_header(tokens) do
+  defp filter_section_starts(tokens) do
+    Enum.filter(tokens, fn {token, _line, _value} -> :section_start == token end)
+  end
+
+  defp filter_directions_header(tokens) do
     Enum.filter(tokens, fn {_token, _line, value} -> 'BEFORE' == value end)
   end
 
-  def filter_tokens_for_integers_and_fractions(tokens) do
+  defp filter_ingredients_header(tokens) do
+    Enum.filter(tokens, fn {_token, _line, value} -> 'INGREDIENTS' == value end)
+  end
+
+  defp filter_tokens_for_integers_and_fractions(tokens) do
     Enum.filter(tokens, fn {token, _line, _value} -> :int == token || :fraction == token end)
   end
 
-  def filter_tokens_by_line(tokens, target_line) do
+  defp filter_tokens_by_line(tokens, target_line) do
     Enum.filter(tokens, fn {_token, line, _value} -> line == target_line end)
   end
 
-  def filter_tokens_by_range(tokens, [first_line, last_line]) do
+  defp filter_tokens_by_range(tokens, [first_line, last_line]) do
     Enum.filter(tokens, fn {_token, line, _value} ->  first_line <= line && line <= last_line end)
   end
 
-  def reject_integers(tokens) do
+  defp reject_integers(tokens) do
     Enum.reject(tokens, fn {token, _line, _value} -> :int == token end)
   end
 
-  def get_line_number([{_token, line, _value}]) do
+  defp get_line_number([{_token, line, _value}]) do
     line
   end
 
-  def trim_newlines(tokens) do
+  defp trim_newlines(tokens) do
     Enum.reject(tokens, fn {token, _line, _value} -> token == :new_line end)
   end
 
-  def trim_section_start(tokens) do
+  defp trim_section_start(tokens) do
     Enum.reject(tokens, fn {token, _line, _value} -> token == :section_start end)
   end
 
-  def trim_section_end(tokens) do
+  defp trim_section_end(tokens) do
     Enum.reject(tokens, fn {token, _line, _value} -> token == :section_end end)
   end
 
-  def unwrap(tokens) do
+  defp unwrap(tokens) do
     Enum.map(tokens, fn {_token, _line, value} -> value end)
   end
 
-  def set_max_and_min(list) do
+  defp set_max_and_min(list) do
     %{min: Enum.min(list), max: Enum.max(list)}
   end
 
@@ -134,7 +192,7 @@ defmodule RecipeParser do
     |> Enum.join(" ")
   end
 
-  # OLD FUNCTIONS - CLEAR ONCE NEW METHODS ARE DONE
+
 
   def parse_grocery_list(filepath) do
     filepath

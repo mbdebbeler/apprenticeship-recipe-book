@@ -1,3 +1,3 @@
 defmodule Ingredient do
-  defstruct [:name, :quantity, :unit]
+  defstruct [:quantity, :context]
 end

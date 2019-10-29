@@ -3,13 +3,40 @@ defmodule RecipeParserTest do
   import RecipeParser
 
   describe "parse_tokens/1" do
-    test "returns a %Recipe{} with title, servings, ingredients and directions" do
+    test "returns a %Recipe{} struct with title, servings, ingredients and directions" do
       filepath = './recipes/mujaddara.txt'
       output = parse_tokens(filepath)
+      first_expected_direction = %{
+        direction: "Do not substitute smaller French lentils for the green or brown lentils. When preparing the Crispy Onions (see related content), be sure to reserve  tablespoons of the onion cooking oil for cooking the rice and lentils.",
+        display_index: "Before you start: "
+      }
 
       assert %{title: "Rice and Lentils with Crispy Onions (Mujaddara)"} = output
       assert %{servings: %{min: 4, max: 6}} = output
+      assert Enum.member?(output.directions, first_expected_direction)
     end
+  end
+
+  describe "parse_ingredients/1" do
+     test "when there are sublists, returns a List of Lists of %Ingredient{} structs, each with fields :quantity, :context" do
+       filepath = './recipes/esquites.txt'
+       tokens = Parser.lex(read_file(filepath))
+
+       output = parse_ingredients(tokens)
+       first_expected_ingredient = %Ingredient{quantity: 3, context: "tablespoons lime juice, plus extra for seasoning (2 limes)"}
+
+       assert Enum.member?(output, first_expected_ingredient)
+     end
+
+     test "when there are no sublists, returns a List of %Ingredient{} structs, each with fields :quantity, :context" do
+       filepath = './recipes/mujaddara.txt'
+       tokens = Parser.lex(read_file(filepath))
+
+       output = parse_ingredients(tokens)
+       expected_list_of_subrecipes = [%Recipe{title: "YOGURT SAUCE", ingredients: [%Ingredient{quantity: 1, context: "cup whole milk yogurt"}]}]
+
+       assert Enum.member?(output, expected_list_of_subrecipes)
+     end
   end
 
   describe "parse_directions/1" do
@@ -18,14 +45,23 @@ defmodule RecipeParserTest do
        tokens = Parser.lex(read_file(filepath))
 
        output = parse_directions(tokens)
-       expected_output = %{display_index: "Before you start:", direction: "Direction"}
 
-       assert output == expected_output
+       first_expected_direction = %{
+                direction: "Do not substitute smaller French lentils for the green or brown lentils. When preparing the Crispy Onions (see related content), be sure to reserve  tablespoons of the onion cooking oil for cooking the rice and lentils.",
+                display_index: "Before you start: "
+              }
+        second_expected_direction = %{
+                direction: "FOR THE YOGURT SAUCE: Whisk all ingredients together in bowl. Refrigerate while preparing rice and lentils.",
+                display_index: 1
+              }
+
+       assert Enum.member?(output, first_expected_direction)
+       assert Enum.member?(output, second_expected_direction)
      end
   end
 
   describe "parse_servings/2" do
-    test "returns a map of with :min and :max fields" do
+    test "returns a Map of servings for each recipe with :min and :max fields" do
             tokens = [
         {:word, 1, 'Rice'},
         {:whitespace, 1, ' '},
@@ -92,43 +128,6 @@ defmodule RecipeParserTest do
       output = parse_title(tokens)
       expected_output = "2 cups water (approximately)"
       assert output == expected_output
-    end
-  end
-
-  describe "filter_tokens_by_line/2" do
-    test "returns only tokens where line is 1" do
-      tokens = [
-        {:int, 1, 2},
-        {:whitespace, 1, ' '},
-        {:word, 1, 'cups'},
-        {:whitespace, 1, ' '},
-        {:word, 1, 'water'},
-        {:whitespace, 1, ' '},
-        {:char, 1, '('},
-        {:word, 1, 'approximately'},
-        {:char, 1, ')'},
-        {:new_line, 1, '\n'},
-        {:int, 2, 2},
-        {:whitespace, 2, ' '},
-        {:word, 2, 'tablespoons'},
-        {:whitespace, 2, ' '},
-        {:word, 2, 'water'},
-        {:whitespace, 2, ' '},
-        {:char, 2, '('},
-        {:word, 2, 'additional'},
-        {:whitespace, 2, ' '},
-        {:word, 2, 'if'},
-        {:whitespace, 2, ' '},
-        {:word, 2, 'needed'},
-        {:char, 2, ')'},
-        {:section_end, 2, '\n\n'}
-      ]
-
-      target_line = 1
-
-      output = filter_tokens_by_line(tokens, target_line)
-      rejected_token = {:word, 2, 'additional'}
-      refute Enum.member?(output, rejected_token)
     end
   end
 
