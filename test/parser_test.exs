@@ -303,8 +303,7 @@ defmodule ParserTest do
     end
 
     test "tokenizes upcased words differently than downcased words" do
-      recipe_string =
-        "INGREDIENTS: YOGURT SAUCE 1 cup whole milk yogurt"
+      recipe_string = "INGREDIENTS: YOGURT SAUCE 1 cup whole milk yogurt"
 
       output = lex(recipe_string)
       expected_upcase_word = {:upcase_word, 1, 'YOGURT'}
@@ -323,5 +322,4 @@ defmodule ParserTest do
       assert output == expected_output
     end
   end
-
 end
