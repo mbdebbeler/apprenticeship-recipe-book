@@ -41,13 +41,13 @@ defmodule Messages do
   end
 
   def get_recipe(number) when number != :all do
-    RecipeParser.generate_recipe_map()
+    Parser.generate_recipe_map()
     |> Map.values()
     |> Enum.fetch!(String.to_integer(number) - 1)
   end
 
   def get_recipe(:all) do
-    RecipeParser.generate_recipe_map()
+    Parser.generate_recipe_map()
     |> Map.keys()
     |> generate_numbered_list
   end
