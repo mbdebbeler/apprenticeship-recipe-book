@@ -41,6 +41,105 @@ defmodule ParserTest do
     end
   end
 
+  describe "new_parse_ingredients/1" do
+    # test "when there are sublists, returns a %Recipe{} with :title, a string and :ingredients, a list of %Ingredient{} structs, with fields :quantity, :unit, :name, :details" do
+    #   filepath = './recipes/mujaddara.txt'
+    #   tokens = Lexer.lex(read_file(filepath))
+    #
+    #   output = new_parse_ingredients(tokens)
+    #   expected_list_of_subrecipes = [%Recipe{title: "YOGURT SAUCE", ingredients: [%Ingredient{}]}]
+    #
+    #   assert output == expected_list_of_subrecipes
+    # end
+
+    test "when there are no sublists, returns a List of %Ingredient{} structs, each with fields :quantity, :unit, :name, :details" do
+      filepath = './recipes/esquites.txt'
+      tokens = Lexer.lex(read_file(filepath))
+
+      output = new_parse_ingredients(tokens)
+
+      assert [%Ingredient{}] = output
+    end
+
+    test "when there are no sublists and only one ingredient, returns an %Ingredient{} struct, with fields :quantity, :unit, :name, :details" do
+      tokens = [
+        {:int, 8, 3},
+        {:whitespace, 8, ' '},
+        {:word, 8, 'tablespoons'},
+        {:whitespace, 8, ' '},
+        {:word, 8, 'lime'},
+        {:whitespace, 8, ' '},
+        {:word, 8, 'juice'},
+        {:char, 8, ','},
+        {:whitespace, 8, ' '},
+        {:word, 8, 'plus'},
+        {:whitespace, 8, ' '},
+        {:word, 8, 'extra'},
+        {:whitespace, 8, ' '},
+        {:word, 8, 'for'},
+        {:whitespace, 8, ' '},
+        {:word, 8, 'seasoning'},
+        {:whitespace, 8, ' '},
+        {:char, 8, '('},
+        {:int, 8, 2},
+        {:whitespace, 8, ' '},
+        {:word, 8, 'limes'},
+        {:char, 8, ')'},
+        {:new_line, 8, '\n'},
+            ]
+
+      output = handle_sub_recipes(tokens)
+      expected_output = [%Ingredient{quantity: 3, unit: "tablespoons", name: "lime juice", details: "plus extra for seasoning (2 limes)"}]
+
+      assert expected_output == output
+    end
+  end
+
+
+  describe "has_sub_recipe?/1" do
+    test "returns a boolean, false if list of ingredients tokens does not contain an :upcased_word token" do
+      tokens = [
+        {:int, 9, 1},
+        {:whitespace, 9, ' '},
+        {:word, 9, 'cup'},
+        {:whitespace, 9, ' '},
+        {:word, 9, 'plain'},
+        {:whitespace, 9, ' '},
+        {:word, 9, 'whole'},
+        {:char, 9, '-'},
+        {:word, 9, 'milk'}
+      ]
+
+      output = has_sub_recipe?(tokens)
+      expected_output = false
+
+      assert output == expected_output
+    end
+
+    test "returns a boolean, true if list of ingredients tokens contains an :upcased_word token" do
+      tokens = [
+        {:upcase_word, 8, 'YOGURT'},
+        {:whitespace, 8, ' '},
+        {:upcase_word, 8, 'SAUCE'},
+        {:new_line, 8, '\n'},
+        {:int, 9, 1},
+        {:whitespace, 9, ' '},
+        {:word, 9, 'cup'},
+        {:whitespace, 9, ' '},
+        {:word, 9, 'plain'},
+        {:whitespace, 9, ' '},
+        {:word, 9, 'whole'},
+        {:char, 9, '-'},
+        {:word, 9, 'milk'}
+      ]
+
+      output = has_sub_recipe?(tokens)
+      expected_output = true
+
+      assert output == expected_output
+    end
+  end
+
   describe "parse_directions/1" do
     test "returns a List of directions, each stored in a map that contains :display_index and :direction" do
       filepath = './recipes/mujaddara.txt'

@@ -55,6 +55,16 @@ defmodule Parser do
     |> join_each_line()
   end
 
+  def new_parse_ingredients(tokens) do
+    range = tokens |> find_ingredients_range()
+
+    tokens
+    |> filter_tokens_by_range(range)
+
+    [%Ingredient{}]
+  end
+
+
   def parse_directions(tokens) do
     range = tokens |> find_directions_range()
 
@@ -68,6 +78,21 @@ defmodule Parser do
     |> join_each_line()
     |> map_each_direction()
     |> update_first_direction_display_index()
+  end
+
+  def handle_sub_recipes(ingredients_range) do
+    if has_sub_recipe?(ingredients_range) do
+      ingredients_range
+    else
+      ingredients_range
+      |> chunk_by_line_number()
+      |> Enum.filter(tokens, fn {token, _line, _value} -> :section_start == token end)
+
+    end
+  end
+
+  def has_sub_recipe?(tokens) do
+    Enum.any?(tokens, fn {token, _line, _value} -> :upcase_word == token end)
   end
 
   defp update_first_direction_display_index(direction_list) do
@@ -112,8 +137,7 @@ defmodule Parser do
     first_line =
       tokens |> filter_section_starts |> filter_ingredients_header |> unwrap_line_number
 
-    last_line =
-      tokens |> filter_section_starts |> filter_directions_header |> unwrap_line_number
+    last_line = tokens |> filter_section_starts |> filter_directions_header |> unwrap_line_number
 
     [first_line + 1, last_line - 1]
   end
