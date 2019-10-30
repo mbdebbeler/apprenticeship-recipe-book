@@ -136,8 +136,8 @@ defmodule ParserTest do
     end
   end
 
-  describe "generate_recipe_map/0" do
-    output = generate_recipe_map()
+  describe "prepare_recipe_index_map/0" do
+    output = prepare_recipe_index_map()
 
     expected_output = %{
       "Best Chicken Stew" => "recipes/best_chicken_stew.txt",

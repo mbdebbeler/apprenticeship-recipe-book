@@ -26,7 +26,7 @@ defmodule Parser do
     |> trim_newlines()
     |> trim_section_start()
     |> trim_section_end()
-    |> unwrap()
+    |> unwrap_values()
     |> Enum.join()
   end
 
@@ -39,8 +39,8 @@ defmodule Parser do
     |> trim_section_start()
     |> trim_section_end()
     |> filter_tokens_for_integers_and_fractions()
-    |> unwrap()
-    |> set_max_and_min()
+    |> unwrap_values()
+    |> set_max_and_min_servings()
   end
 
   def parse_ingredients(tokens) do
@@ -51,7 +51,7 @@ defmodule Parser do
     |> trim_newlines()
     |> trim_section_start()
     |> trim_section_end()
-    |> chunk_by_same_line()
+    |> chunk_by_line_number()
     |> join_each_line()
   end
 
@@ -63,14 +63,14 @@ defmodule Parser do
     |> trim_newlines()
     |> trim_section_start()
     |> trim_section_end()
-    |> chunk_by_same_line()
-    |> reject_single_token_lines()
+    |> chunk_by_line_number()
+    |> trim_single_token_lines()
     |> join_each_line()
     |> map_each_direction()
-    |> check_display_index()
+    |> update_first_direction_display_index()
   end
 
-  defp check_display_index(direction_list) do
+  defp update_first_direction_display_index(direction_list) do
     Enum.map(direction_list, fn direction_map ->
       correct_first_display_index(direction_map)
     end)
@@ -93,22 +93,28 @@ defmodule Parser do
   end
 
   defp join_each_line(token_list) do
-    Enum.map(token_list, fn token -> Enum.join(unwrap(token)) end)
+    Enum.map(token_list, fn token -> Enum.join(unwrap_values(token)) end)
   end
 
-  defp chunk_by_same_line(tokens) do
+  defp chunk_by_line_number(tokens) do
     Enum.chunk_by(tokens, fn {_token, line, _value} -> line end)
   end
 
   defp find_directions_range(tokens) do
-    first_line = tokens |> filter_section_starts() |> filter_directions_header |> get_line_number
-    last_line = [List.last(tokens)] |> get_line_number
+    first_line =
+      tokens |> filter_section_starts() |> filter_directions_header |> unwrap_line_number
+
+    last_line = [List.last(tokens)] |> unwrap_line_number
     [first_line + 1, last_line]
   end
 
   defp find_ingredients_range(tokens) do
-    first_line = tokens |> filter_section_starts() |> filter_ingredients_header |> get_line_number
-    last_line = tokens |> filter_section_starts() |> filter_directions_header |> get_line_number
+    first_line =
+      tokens |> filter_section_starts() |> filter_ingredients_header |> unwrap_line_number
+
+    last_line =
+      tokens |> filter_section_starts() |> filter_directions_header |> unwrap_line_number
+
     [first_line + 1, last_line - 1]
   end
 
@@ -136,12 +142,8 @@ defmodule Parser do
     Enum.filter(tokens, fn {_token, line, _value} -> first_line <= line && line <= last_line end)
   end
 
-  def reject_single_token_lines(list_of_lines) do
-    Enum.reject(list_of_lines, fn line -> Enum.count(line) == 1 end)
-  end
-
-  defp get_line_number([{_token, line, _value}]) do
-    line
+  def trim_single_token_lines(lines) do
+    Enum.reject(lines, fn line -> Enum.count(line) == 1 end)
   end
 
   defp trim_newlines(tokens) do
@@ -156,11 +158,15 @@ defmodule Parser do
     Enum.reject(tokens, fn {token, _line, _value} -> token == :section_end end)
   end
 
-  defp unwrap(tokens) do
+  defp unwrap_values(tokens) do
     Enum.map(tokens, fn {_token, _line, value} -> value end)
   end
 
-  defp set_max_and_min(list) do
+  defp unwrap_line_number([{_token, line, _value}]) do
+    line
+  end
+
+  defp set_max_and_min_servings(list) do
     if Enum.empty?(list) do
       []
     else
@@ -168,7 +174,7 @@ defmodule Parser do
     end
   end
 
-  def generate_recipe_map do
+  def prepare_recipe_index_map do
     filepath = "./recipes/*.txt"
     recipe_files = fetch_list_of_recipe_files(filepath)
     recipe_names = parse_list_of_recipe_names(filepath)
@@ -184,10 +190,10 @@ defmodule Parser do
     |> fetch_list_of_recipe_files
     |> Enum.map(fn x -> Path.basename(x, ".txt") end)
     |> Enum.map(fn x -> Regex.replace(~r/_/, x, " ") end)
-    |> Enum.map(fn x -> capitalize_per_word(x) end)
+    |> Enum.map(fn x -> capitalize_each_word(x) end)
   end
 
-  defp capitalize_per_word(string) do
+  defp capitalize_each_word(string) do
     String.split(string)
     |> Enum.map(&String.capitalize/1)
     |> Enum.join(" ")

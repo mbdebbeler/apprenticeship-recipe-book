@@ -41,19 +41,14 @@ defmodule Messages do
   end
 
   def get_recipe(number) when number != :all do
-    Parser.generate_recipe_map()
+    Parser.prepare_recipe_index_map()
     |> Map.values()
     |> Enum.fetch!(String.to_integer(number) - 1)
   end
 
   def get_recipe(:all) do
-    Parser.generate_recipe_map()
+    Parser.prepare_recipe_index_map()
     |> Map.keys()
-    |> generate_numbered_list
-  end
-
-  defp generate_numbered_list(items) do
-    items
     |> Enum.with_index(1)
     |> Enum.map(fn {k, v} -> "#{v}) #{k}\n" end)
   end
