@@ -20,33 +20,11 @@ defmodule ParserTest do
   end
 
   describe "parse_ingredients/1" do
-    test "when there are sublists, returns a List of ingredients with subrecipe titles included in list" do
-      filepath = './recipes/mujaddara.txt'
-      tokens = Lexer.lex(read_file(filepath))
-
-      output = parse_ingredients(tokens)
-      first_expected_ingredient = "YOGURT SAUCE"
-
-      assert Enum.member?(output, first_expected_ingredient)
-    end
-
-    test "when there are no sublists, returns a List of ingredients" do
-      filepath = './recipes/esquites.txt'
-      tokens = Lexer.lex(read_file(filepath))
-
-      output = parse_ingredients(tokens)
-      first_expected_ingredient = "3 tablespoons lime juice, plus extra for seasoning (2 limes)"
-
-      assert Enum.member?(output, first_expected_ingredient)
-    end
-  end
-
-  describe "new_parse_ingredients/1" do
     test "when there are sublists, returns a %Recipe{} with :title, a string and :ingredients, a list of %Ingredient{} structs, with fields :quantity, :unit, :name, :details" do
       filepath = './recipes/mujaddara.txt'
       tokens = Lexer.lex(read_file(filepath))
 
-      output = new_parse_ingredients(tokens)
+      output = parse_ingredients(tokens)
 
       expected_output = [
         %Recipe{
@@ -102,7 +80,7 @@ defmodule ParserTest do
     test "when there are no sublists, returns a List of %Ingredient{} structs, each with fields :quantity, :unit, :name, :details" do
       filepath = './recipes/esquites.txt'
       tokens = Lexer.lex(read_file(filepath))
-      output = new_parse_ingredients(tokens)
+      output = parse_ingredients(tokens)
 
       ingredient_with_all_parts = %Ingredient{
         details: "plus extra for seasoning (2 limes)",
@@ -261,12 +239,14 @@ defmodule ParserTest do
       expected_output = %Recipe{
         directions: nil,
         servings: nil,
-        ingredients: [%Ingredient{
-          details: nil,
-          name: "lemon juice",
-          quantity: "2",
-          unit: 'tablespoons'
-        }],
+        ingredients: [
+          %Ingredient{
+            details: nil,
+            name: "lemon juice",
+            quantity: "2",
+            unit: 'tablespoons'
+          }
+        ],
         title: "YOGURT SAUCE"
       }
 

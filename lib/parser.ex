@@ -48,18 +48,6 @@ defmodule Parser do
 
     tokens
     |> filter_tokens_by_range(range)
-    |> trim_newlines()
-    |> trim_section_start()
-    |> trim_section_end()
-    |> chunk_by_line_number()
-    |> join_each_line()
-  end
-
-  def new_parse_ingredients(tokens) do
-    range = tokens |> find_ingredients_range()
-
-    tokens
-    |> filter_tokens_by_range(range)
     |> handle_sub_recipes
   end
 
@@ -120,7 +108,7 @@ defmodule Parser do
   end
 
   def build_ingredient_struct(line) do
-    quantity = pa_quantity(line)
+    quantity = parse_quantity(line)
     details = parse_details(line)
     unit = parse_unit(line)
     name = parse_name(line)
@@ -413,7 +401,7 @@ defmodule Parser do
       filepath
       |> parse_tokens()
 
-    generate_bulleted_list(recipe.ingredients)
+    recipe
   end
 
   def generate_bulleted_list(items) do

@@ -205,13 +205,43 @@ defmodule ControllerTest do
                    }
                  ],
                  ingredients: [
-                   "1 1/4 cups unbleached all-purpose flour (6 1/4 ounces)",
-                   "1/2 teaspoon table salt",
-                   "1 tablespoon sugar",
-                   "6 tablespoons cold unsalted butter (3/4 stick), cut into 1/4-inch slices",
-                   "1/4 cup chilled solid vegetable shortening, cut into 2 pieces",
-                   "2 tablespoons vodka, cold",
-                   "2 tablespoons cold water"
+                   %Ingredient{
+                     details: "(6 1/4 ounces)",
+                     name: "unbleached all-purpose flour (6 1/4 )",
+                     quantity: "1 1/4",
+                     unit: 'cups'
+                   },
+                   %Ingredient{
+                     details: nil,
+                     name: "table salt",
+                     quantity: "1/2",
+                     unit: 'teaspoon'
+                   },
+                   %Ingredient{details: nil, name: "sugar", quantity: "1", unit: 'tablespoon'},
+                   %Ingredient{
+                     details: "(3/4 stick), cut into 1/4-inch slices",
+                     name: "cold unsalted butter (3/4 stick)",
+                     quantity: "6",
+                     unit: 'tablespoons'
+                   },
+                   %Ingredient{
+                     details: "cut into 2 pieces",
+                     name: "chilled solid vegetable shortening",
+                     quantity: "1/4",
+                     unit: 'cup'
+                   },
+                   %Ingredient{
+                     details: "cold",
+                     name: "vodka",
+                     quantity: "2",
+                     unit: 'tablespoons'
+                   },
+                   %Ingredient{
+                     details: nil,
+                     name: "cold water",
+                     quantity: "2",
+                     unit: 'tablespoons'
+                   }
                  ],
                  servings: [],
                  title: "Foolproof Pie Dough for a Single-Crust Pie"
@@ -278,15 +308,81 @@ defmodule ControllerTest do
       updated_context = fetch_content(initial_context)
 
       assert %{
-               content: [
-                 "- 1 1/4 cups unbleached all-purpose flour (6 1/4 ounces)\n",
-                 "- 1/2 teaspoon table salt\n",
-                 "- 1 tablespoon sugar\n",
-                 "- 6 tablespoons cold unsalted butter (3/4 stick), cut into 1/4-inch slices\n",
-                 "- 1/4 cup chilled solid vegetable shortening, cut into 2 pieces\n",
-                 "- 2 tablespoons vodka, cold\n",
-                 "- 2 tablespoons cold water\n"
-               ]
+               content: %Recipe{
+                 directions: [
+                   %{
+                     direction:
+                       "Vodka is essential to the texture of the crust and imparts no flavor-do not substitute extra water. The alcohol is key to our recipe; if you don't have vodka on hand, you can use another 80 proof liquor. This dough will be moister and more supple than most standard pie doughs and will require more flour to roll out (up to 1/4 cup).",
+                     display_index: "Before you start"
+                   },
+                   %{
+                     direction:
+                       "Process 3/4 cups flour, salt, and sugar together in food processor until combined, about 2 one-second pulses. Add butter and shortening and process until homogenous dough just starts to collect in uneven clumps, about 10 seconds (dough will resemble cottage cheese curds with some very small pieces of butter remaining, but there should be no uncoated flour). Scrape down sides and bottom of bowl with rubber spatula and redistribute dough evenly around processor blade. Add remaining 1/2 cup flour and pulse until mixture is evenly distributed around bowl and mass of dough has been broken up, 4 to 6 quick pulses. Empty mixture into medium bowl.",
+                     display_index: 1
+                   },
+                   %{
+                     direction:
+                       "Sprinkle vodka and water over mixture. With rubber spatula, use folding motion to mix, pressing down on dough until dough is slightly tacky and sticks together. Flatten dough into 4-inch disk. Wrap in plastic wrap and refrigerate at least 45 minutes or up to 2 days.",
+                     display_index: 2
+                   },
+                   %{
+                     direction:
+                       "Adjust oven rack to lowest position, place rimmed baking sheet on oven rack, and heat oven to 425 degrees. Remove dough from refrigerator and roll out on generously floured (up to 1/4 cup) work surface to 12-inch circle about 1/8 inch thick. Roll dough loosely around rolling pin and unroll into pie plate, leaving at least 1-inch overhang on each side. Working around circumference, ease dough into plate by gently lifting edge of dough with one hand while pressing into plate bottom with other hand. Leave overhanging dough in place; refrigerate until dough is firm, about 30 minutes.",
+                     display_index: 3
+                   },
+                   %{
+                     direction:
+                       "Trim overhang to 1/2 inch beyond lip of pie plate. Fold overhang under itself; folded edge should be flush with edge of pie plate. Flute dough or press the tines of a fork against dough to flatten it against rim of pie plate. Refrigerate dough-lined plate until firm, about 15 minutes.",
+                     display_index: 4
+                   },
+                   %{
+                     direction:
+                       "Remove pie pan from refrigerator, line crust with foil, and fill with pie weights or pennies. Bake for 15 minutes. Remove foil and weights, rotate plate, and bake for 5 to 10 minutes additional minutes until crust is golden brown and crisp.",
+                     display_index: 5
+                   }
+                 ],
+                 ingredients: [
+                   %Ingredient{
+                     details: "(6 1/4 ounces)",
+                     name: "unbleached all-purpose flour (6 1/4 )",
+                     quantity: "1 1/4",
+                     unit: 'cups'
+                   },
+                   %Ingredient{
+                     details: nil,
+                     name: "table salt",
+                     quantity: "1/2",
+                     unit: 'teaspoon'
+                   },
+                   %Ingredient{details: nil, name: "sugar", quantity: "1", unit: 'tablespoon'},
+                   %Ingredient{
+                     details: "(3/4 stick), cut into 1/4-inch slices",
+                     name: "cold unsalted butter (3/4 stick)",
+                     quantity: "6",
+                     unit: 'tablespoons'
+                   },
+                   %Ingredient{
+                     details: "cut into 2 pieces",
+                     name: "chilled solid vegetable shortening",
+                     quantity: "1/4",
+                     unit: 'cup'
+                   },
+                   %Ingredient{
+                     details: "cold",
+                     name: "vodka",
+                     quantity: "2",
+                     unit: 'tablespoons'
+                   },
+                   %Ingredient{
+                     details: nil,
+                     name: "cold water",
+                     quantity: "2",
+                     unit: 'tablespoons'
+                   }
+                 ],
+                 servings: [],
+                 title: "Foolproof Pie Dough for a Single-Crust Pie"
+               }
              } = updated_context
 
       assert %{view: :grocery_list} = updated_context
@@ -469,13 +565,43 @@ defmodule ControllerTest do
                    }
                  ],
                  ingredients: [
-                   "1 1/4 cups unbleached all-purpose flour (6 1/4 ounces)",
-                   "1/2 teaspoon table salt",
-                   "1 tablespoon sugar",
-                   "6 tablespoons cold unsalted butter (3/4 stick), cut into 1/4-inch slices",
-                   "1/4 cup chilled solid vegetable shortening, cut into 2 pieces",
-                   "2 tablespoons vodka, cold",
-                   "2 tablespoons cold water"
+                   %Ingredient{
+                     details: "(6 1/4 ounces)",
+                     name: "unbleached all-purpose flour (6 1/4 )",
+                     quantity: "1 1/4",
+                     unit: 'cups'
+                   },
+                   %Ingredient{
+                     details: nil,
+                     name: "table salt",
+                     quantity: "1/2",
+                     unit: 'teaspoon'
+                   },
+                   %Ingredient{details: nil, name: "sugar", quantity: "1", unit: 'tablespoon'},
+                   %Ingredient{
+                     details: "(3/4 stick), cut into 1/4-inch slices",
+                     name: "cold unsalted butter (3/4 stick)",
+                     quantity: "6",
+                     unit: 'tablespoons'
+                   },
+                   %Ingredient{
+                     details: "cut into 2 pieces",
+                     name: "chilled solid vegetable shortening",
+                     quantity: "1/4",
+                     unit: 'cup'
+                   },
+                   %Ingredient{
+                     details: "cold",
+                     name: "vodka",
+                     quantity: "2",
+                     unit: 'tablespoons'
+                   },
+                   %Ingredient{
+                     details: nil,
+                     name: "cold water",
+                     quantity: "2",
+                     unit: 'tablespoons'
+                   }
                  ],
                  servings: [],
                  title: "Foolproof Pie Dough for a Single-Crust Pie"
@@ -504,15 +630,81 @@ defmodule ControllerTest do
       updated_context = fetch_grocery_list(initial_context)
 
       assert %{
-               content: [
-                 "- 1 1/4 cups unbleached all-purpose flour (6 1/4 ounces)\n",
-                 "- 1/2 teaspoon table salt\n",
-                 "- 1 tablespoon sugar\n",
-                 "- 6 tablespoons cold unsalted butter (3/4 stick), cut into 1/4-inch slices\n",
-                 "- 1/4 cup chilled solid vegetable shortening, cut into 2 pieces\n",
-                 "- 2 tablespoons vodka, cold\n",
-                 "- 2 tablespoons cold water\n"
-               ]
+               content: %Recipe{
+                 directions: [
+                   %{
+                     direction:
+                       "Vodka is essential to the texture of the crust and imparts no flavor-do not substitute extra water. The alcohol is key to our recipe; if you don't have vodka on hand, you can use another 80 proof liquor. This dough will be moister and more supple than most standard pie doughs and will require more flour to roll out (up to 1/4 cup).",
+                     display_index: "Before you start"
+                   },
+                   %{
+                     direction:
+                       "Process 3/4 cups flour, salt, and sugar together in food processor until combined, about 2 one-second pulses. Add butter and shortening and process until homogenous dough just starts to collect in uneven clumps, about 10 seconds (dough will resemble cottage cheese curds with some very small pieces of butter remaining, but there should be no uncoated flour). Scrape down sides and bottom of bowl with rubber spatula and redistribute dough evenly around processor blade. Add remaining 1/2 cup flour and pulse until mixture is evenly distributed around bowl and mass of dough has been broken up, 4 to 6 quick pulses. Empty mixture into medium bowl.",
+                     display_index: 1
+                   },
+                   %{
+                     direction:
+                       "Sprinkle vodka and water over mixture. With rubber spatula, use folding motion to mix, pressing down on dough until dough is slightly tacky and sticks together. Flatten dough into 4-inch disk. Wrap in plastic wrap and refrigerate at least 45 minutes or up to 2 days.",
+                     display_index: 2
+                   },
+                   %{
+                     direction:
+                       "Adjust oven rack to lowest position, place rimmed baking sheet on oven rack, and heat oven to 425 degrees. Remove dough from refrigerator and roll out on generously floured (up to 1/4 cup) work surface to 12-inch circle about 1/8 inch thick. Roll dough loosely around rolling pin and unroll into pie plate, leaving at least 1-inch overhang on each side. Working around circumference, ease dough into plate by gently lifting edge of dough with one hand while pressing into plate bottom with other hand. Leave overhanging dough in place; refrigerate until dough is firm, about 30 minutes.",
+                     display_index: 3
+                   },
+                   %{
+                     direction:
+                       "Trim overhang to 1/2 inch beyond lip of pie plate. Fold overhang under itself; folded edge should be flush with edge of pie plate. Flute dough or press the tines of a fork against dough to flatten it against rim of pie plate. Refrigerate dough-lined plate until firm, about 15 minutes.",
+                     display_index: 4
+                   },
+                   %{
+                     direction:
+                       "Remove pie pan from refrigerator, line crust with foil, and fill with pie weights or pennies. Bake for 15 minutes. Remove foil and weights, rotate plate, and bake for 5 to 10 minutes additional minutes until crust is golden brown and crisp.",
+                     display_index: 5
+                   }
+                 ],
+                 ingredients: [
+                   %Ingredient{
+                     details: "(6 1/4 ounces)",
+                     name: "unbleached all-purpose flour (6 1/4 )",
+                     quantity: "1 1/4",
+                     unit: 'cups'
+                   },
+                   %Ingredient{
+                     details: nil,
+                     name: "table salt",
+                     quantity: "1/2",
+                     unit: 'teaspoon'
+                   },
+                   %Ingredient{details: nil, name: "sugar", quantity: "1", unit: 'tablespoon'},
+                   %Ingredient{
+                     details: "(3/4 stick), cut into 1/4-inch slices",
+                     name: "cold unsalted butter (3/4 stick)",
+                     quantity: "6",
+                     unit: 'tablespoons'
+                   },
+                   %Ingredient{
+                     details: "cut into 2 pieces",
+                     name: "chilled solid vegetable shortening",
+                     quantity: "1/4",
+                     unit: 'cup'
+                   },
+                   %Ingredient{
+                     details: "cold",
+                     name: "vodka",
+                     quantity: "2",
+                     unit: 'tablespoons'
+                   },
+                   %Ingredient{
+                     details: nil,
+                     name: "cold water",
+                     quantity: "2",
+                     unit: 'tablespoons'
+                   }
+                 ],
+                 servings: [],
+                 title: "Foolproof Pie Dough for a Single-Crust Pie"
+               }
              } = updated_context
 
       assert %{view: :grocery_list} = updated_context

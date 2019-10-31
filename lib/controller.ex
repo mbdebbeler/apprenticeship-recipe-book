@@ -107,7 +107,7 @@ defmodule Controller do
   def fetch_grocery_list(%{last_input: last_input} = context) do
     grocery_list =
       Messages.get_recipe(last_input)
-      |> Parser.parse_grocery_list()
+      |> Parser.parse_tokens()
 
     %{context | content: grocery_list, view: :grocery_list}
   end
