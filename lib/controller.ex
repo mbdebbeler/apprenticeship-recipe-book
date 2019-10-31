@@ -66,7 +66,7 @@ defmodule Controller do
 
   def fetch_content(%{input: input, view: :grocery_list} = context) do
     if RecipeParser.is_valid_quantity(input) do
-      RecipeParser.change_servings(context)
+      context
     else
       fetch_unknown_error(context)
     end
@@ -99,7 +99,7 @@ defmodule Controller do
   def fetch_recipe(%{input: input} = context) do
     recipe =
       Messages.get_recipe(input)
-      |> RecipeParser.read_file()
+      |> RecipeParser.parse_tokens()
 
     %{context | content: recipe, view: :view_recipe, last_input: input}
   end

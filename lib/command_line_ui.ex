@@ -11,7 +11,7 @@ defmodule CommandLineUI do
   def refresh_display(%{io: io} = context) do
     context
     |> clear_display(io)
-    |> prepare_next_screen()
+    |> CommandLineFormatter.prepare_next_screen()
     |> io.puts()
 
     context
@@ -23,12 +23,6 @@ defmodule CommandLineUI do
 
   defp sanitize_input(message, _io) do
     String.capitalize(message)
-  end
-
-  defp prepare_next_screen(%{error: error, menu: menu, header: header, content: content}) do
-    [header, content, menu, error]
-    |> Enum.reject(fn x -> x == nil end)
-    |> Enum.join("\n")
   end
 
   defp clear_display(context, io) do

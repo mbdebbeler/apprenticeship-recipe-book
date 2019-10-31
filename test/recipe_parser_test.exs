@@ -2,10 +2,155 @@ defmodule RecipeParserTest do
   use ExUnit.Case
   import RecipeParser
 
+  describe "parse_tokens/1" do
+    test "returns a %Recipe{} struct with title, servings, ingredients and directions" do
+      filepath = './recipes/mujaddara.txt'
+      output = parse_tokens(filepath)
+
+      first_expected_direction = %{
+        direction:
+          "Do not substitute smaller French lentils for the green or brown lentils. When preparing the Crispy Onions (see related content), be sure to reserve 3 tablespoons of the onion cooking oil for cooking the rice and lentils.",
+        display_index: "Before you start"
+      }
+
+      assert %{title: "Rice and Lentils with Crispy Onions (Mujaddara)"} = output
+      assert %{servings: %{min: 4, max: 6}} = output
+      assert Enum.member?(output.directions, first_expected_direction)
+    end
+  end
+
+  describe "parse_ingredients/1" do
+    test "when there are sublists, returns a List of ingredients with subrecipe titles included in list" do
+      filepath = './recipes/mujaddara.txt'
+      tokens = Parser.lex(read_file(filepath))
+
+      output = parse_ingredients(tokens)
+      first_expected_ingredient = "YOGURT SAUCE"
+
+      assert Enum.member?(output, first_expected_ingredient)
+    end
+
+    test "when there are no sublists, returns a List of ingredients" do
+      filepath = './recipes/esquites.txt'
+      tokens = Parser.lex(read_file(filepath))
+
+      output = parse_ingredients(tokens)
+      first_expected_ingredient = "3 tablespoons lime juice, plus extra for seasoning (2 limes)"
+
+      assert Enum.member?(output, first_expected_ingredient)
+    end
+  end
+
+  describe "parse_directions/1" do
+    test "returns a List of directions, each stored in a map that contains :display_index and :direction" do
+      filepath = './recipes/mujaddara.txt'
+      tokens = Parser.lex(read_file(filepath))
+
+      output = parse_directions(tokens)
+
+      first_expected_direction = %{
+        direction:
+          "Do not substitute smaller French lentils for the green or brown lentils. When preparing the Crispy Onions (see related content), be sure to reserve 3 tablespoons of the onion cooking oil for cooking the rice and lentils.",
+        display_index: "Before you start"
+      }
+
+      second_expected_direction = %{
+        direction:
+          "FOR THE YOGURT SAUCE: Whisk all ingredients together in bowl. Refrigerate while preparing rice and lentils.",
+        display_index: 1
+      }
+
+      assert Enum.member?(output, first_expected_direction)
+      assert Enum.member?(output, second_expected_direction)
+    end
+  end
+
+  describe "parse_servings/2" do
+    test "returns a Map of servings for each recipe with :min and :max fields" do
+      tokens = [
+        {:word, 1, 'Rice'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'and'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'Lentils'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'with'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'Crispy'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'Onions'},
+        {:whitespace, 1, ' '},
+        {:char, 1, '('},
+        {:word, 1, 'Mujaddara'},
+        {:char, 1, ')'},
+        {:new_line, 1, '\n'},
+        {:section_start, 2, 'SERVESServes'},
+        {:whitespace, 2, ' '},
+        {:int, 2, 4},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'to'},
+        {:whitespace, 2, ' '},
+        {:int, 2, 6},
+        {:section_end, 2, '\n\n'}
+      ]
+
+      output = parse_servings(tokens)
+      expected_output = %{min: 4, max: 6}
+
+      assert expected_output == output
+    end
+  end
+
+  describe "parse_title/1" do
+    test "filters tokens, joins them into a string, updates the recipe struct" do
+      tokens = [
+        {:int, 1, 2},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'cups'},
+        {:whitespace, 1, ' '},
+        {:word, 1, 'water'},
+        {:whitespace, 1, ' '},
+        {:char, 1, '('},
+        {:word, 1, 'approximately'},
+        {:char, 1, ')'},
+        {:new_line, 1, '\n'},
+        {:int, 2, 2},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'tablespoons'},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'water'},
+        {:whitespace, 2, ' '},
+        {:char, 2, '('},
+        {:word, 2, 'additional'},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'if'},
+        {:whitespace, 2, ' '},
+        {:word, 2, 'needed'},
+        {:char, 2, ')'},
+        {:section_end, 2, '\n\n'}
+      ]
+
+      output = parse_title(tokens)
+      expected_output = "2 cups water (approximately)"
+      assert output == expected_output
+    end
+  end
+
   describe "generate_recipe_map/0" do
     output = generate_recipe_map()
 
-    expected_output = %{"Best Chicken Stew" => "recipes/best_chicken_stew.txt", "Black Bean Soup" => "recipes/black_bean_soup.txt", "Cauliflower Soup" => "recipes/cauliflower_soup.txt", "Chicken Caesar Salad" => "recipes/chicken_caesar_salad.txt", "Esquites" => "recipes/esquites.txt", "Foolproof Pie Crust" => "recipes/foolproof_pie_crust.txt", "Mujaddara" => "recipes/mujaddara.txt", "Radicchio And Grapefruit Salad" => "recipes/radicchio_and_grapefruit_salad.txt", "Skillet Charred Green Beans" => "recipes/skillet_charred_green_beans.txt", "Tagliatelle With Artichokes" => "recipes/tagliatelle_with_artichokes.txt"}
+    expected_output = %{
+      "Best Chicken Stew" => "recipes/best_chicken_stew.txt",
+      "Black Bean Soup" => "recipes/black_bean_soup.txt",
+      "Cauliflower Soup" => "recipes/cauliflower_soup.txt",
+      "Chicken Caesar Salad" => "recipes/chicken_caesar_salad.txt",
+      "Esquites" => "recipes/esquites.txt",
+      "Foolproof Pie Crust" => "recipes/foolproof_pie_crust.txt",
+      "Mujaddara" => "recipes/mujaddara.txt",
+      "Radicchio And Grapefruit Salad" => "recipes/radicchio_and_grapefruit_salad.txt",
+      "Skillet Charred Green Beans" => "recipes/skillet_charred_green_beans.txt",
+      "Tagliatelle With Artichokes" => "recipes/tagliatelle_with_artichokes.txt"
+    }
 
     assert output == expected_output
   end
@@ -15,7 +160,18 @@ defmodule RecipeParserTest do
       filepath = "./recipes/*.txt"
       output = fetch_list_of_recipe_files(filepath)
 
-      expected_output = ["recipes/best_chicken_stew.txt", "recipes/black_bean_soup.txt", "recipes/cauliflower_soup.txt", "recipes/chicken_caesar_salad.txt", "recipes/esquites.txt", "recipes/foolproof_pie_crust.txt", "recipes/mujaddara.txt", "recipes/radicchio_and_grapefruit_salad.txt", "recipes/skillet_charred_green_beans.txt", "recipes/tagliatelle_with_artichokes.txt"]
+      expected_output = [
+        "recipes/best_chicken_stew.txt",
+        "recipes/black_bean_soup.txt",
+        "recipes/cauliflower_soup.txt",
+        "recipes/chicken_caesar_salad.txt",
+        "recipes/esquites.txt",
+        "recipes/foolproof_pie_crust.txt",
+        "recipes/mujaddara.txt",
+        "recipes/radicchio_and_grapefruit_salad.txt",
+        "recipes/skillet_charred_green_beans.txt",
+        "recipes/tagliatelle_with_artichokes.txt"
+      ]
 
       assert output == expected_output
     end
@@ -26,7 +182,18 @@ defmodule RecipeParserTest do
       filepath = "./recipes/*.txt"
       output = parse_list_of_recipe_names(filepath)
 
-      expected_output = ["Best Chicken Stew", "Black Bean Soup", "Cauliflower Soup", "Chicken Caesar Salad", "Esquites", "Foolproof Pie Crust", "Mujaddara", "Radicchio And Grapefruit Salad", "Skillet Charred Green Beans", "Tagliatelle With Artichokes"]
+      expected_output = [
+        "Best Chicken Stew",
+        "Black Bean Soup",
+        "Cauliflower Soup",
+        "Chicken Caesar Salad",
+        "Esquites",
+        "Foolproof Pie Crust",
+        "Mujaddara",
+        "Radicchio And Grapefruit Salad",
+        "Skillet Charred Green Beans",
+        "Tagliatelle With Artichokes"
+      ]
 
       assert output == expected_output
     end
@@ -42,173 +209,6 @@ defmodule RecipeParserTest do
       output = read_file(filepath)
 
       assert output == expected_output
-    end
-  end
-
-  describe "split_file_by_lines/1" do
-    test "when passed a string of file contents, it splits the string by newlines and returns an list of strings" do
-      example_recipe_chunk = "foo\nbar\nbaz"
-
-      assert split_file_by_lines(example_recipe_chunk) == ["foo", "bar", "baz"]
-    end
-  end
-
-  describe "is_after_ingredients/1" do
-    test "when passed a list of strings, it will return a sub-list of strings between 'ingredients' and a blank line" do
-      example_recipe_chunk = [
-        "foo",
-        "bar",
-        "",
-        "INGREDIENTS",
-        "baz",
-        "zab",
-        "",
-        "Recipes:",
-        "bab"
-      ]
-
-      assert is_after_ingredients(example_recipe_chunk) == ["baz", "zab", "", "Recipes:", "bab"]
-    end
-  end
-
-  describe "is_before_section_break/1" do
-    test "when passed a list of strings, it will return a sub-list of strings before the blank line" do
-      example_recipe_chunk = ["baz", "zab", "", "Recipes:", "bab"]
-
-      assert is_before_section_break(example_recipe_chunk) == ["baz", "zab"]
-    end
-  end
-
-  describe "split_line_by_words/1" do
-    test "when passed a string, splits it by spaces" do
-      ingredients_line = "4 large dried New Mexico or guajillo chiles, stemmed, halved, seeded"
-
-      split_ingredients_line = [
-        "4",
-        "large",
-        "dried",
-        "New",
-        "Mexico",
-        "or",
-        "guajillo",
-        "chiles,",
-        "stemmed,",
-        "halved,",
-        "seeded"
-      ]
-
-      result = split_line_by_words(ingredients_line)
-
-      assert result == split_ingredients_line
-    end
-  end
-
-  describe "transform_line/2" do
-    test "when passed a list of strings and desired_servings, filters and multiplies integers by desired_servings, returns a list of strings" do
-      split_ingredients_line = [
-        "4",
-        "large",
-        "dried",
-        "New",
-        "Mexico",
-        "or",
-        "guajillo",
-        "chiles,",
-        "stemmed,",
-        "halved,",
-        "seeded"
-      ]
-
-      processed_ingredients_line = [
-        "8",
-        "large",
-        "dried",
-        "New",
-        "Mexico",
-        "or",
-        "guajillo",
-        "chiles,",
-        "stemmed,",
-        "halved,",
-        "seeded"
-      ]
-
-      desired_servings = 2
-
-      assert transform_line(split_ingredients_line, desired_servings) ==
-               processed_ingredients_line
-    end
-  end
-
-  describe "is_valid_quantity/1" do
-    test "returns true when passed a string that respresents an integer" do
-      string_four = "4"
-
-      assert is_valid_quantity(string_four) == true
-    end
-
-    test "returns false when passed -1" do
-      string_neg_one = "-1"
-
-      assert is_valid_quantity(string_neg_one) == false
-    end
-
-    test "returns false when passed 0" do
-      string_zero = "0"
-
-      assert is_valid_quantity(string_zero) == false
-    end
-  end
-
-  describe "join_line_by_words/1" do
-    test "concatenates a list of strings into one string" do
-      ingredients_list = [
-        "4",
-        "large",
-        "dried",
-        "New",
-        "Mexico",
-        "or",
-        "guajillo",
-        "chiles,",
-        "stemmed,",
-        "halved,",
-        "seeded"
-      ]
-
-      ingredients_line = "4 large dried New Mexico or guajillo chiles, stemmed, halved, seeded"
-
-      assert join_line_by_words(ingredients_list) == ingredients_line
-    end
-  end
-
-  describe "change_servings/1" do
-    test "takes a context and returns an updated context" do
-      example_context = %{
-        input: "3",
-        content: ["5 spicy olives", "20 potato chips"],
-        header: nil,
-        view: :generate_grocery_list,
-        io: IO,
-        prompt: "Foo",
-        menu: "Bar",
-        error: nil,
-        last_input: "1"
-      }
-
-      transformed_context = %{
-        input: "3",
-        content: ["15 spicy olives", "60 potato chips"],
-        header: nil,
-        view: :generate_grocery_list,
-        io: IO,
-        prompt: "Foo",
-        menu: "Bar",
-        error: nil,
-        last_input: "3"
-      }
-
-      assert change_servings(example_context) == transformed_context
     end
   end
 
