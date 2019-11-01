@@ -2,8 +2,6 @@ defmodule CommandLineUI do
   def get_input(%{prompt: prompt} = context, io \\ IO) do
     prompt
     |> io.gets()
-    |> String.trim()
-    |> String.first()
     |> sanitize_input(io)
     |> (fn input -> Map.put(context, :input, input) end).()
   end
@@ -21,22 +19,53 @@ defmodule CommandLineUI do
     :invalid_input
   end
 
-  def sanitize_input(message, _io) do
-    if is_input_a_recipe?(message) do
-
-    end
-
+  def sanitize_input(input, _io) do
     recipes =
       Parser.prepare_recipe_index_map()
       |> Map.keys()
       |> Enum.with_index(1)
       |> Enum.into(%{})
 
+    commands = %{
+      "q" => :quit,
+      "quit" => :quit,
+      "exit" => :quit,
+      "i" => :index,
+      "index" => :index,
+      "g" => :grocery_list,
+      "grocery list" => :grocery_list,
+      "grocery" => :grocery_list
+    }
 
-# needs to handle Q, quit, I, Grocery list, G
+    message = downcase_and_trim(input)
+
+    cond do
+      is_input_a_recipe?(message, recipes) ->
+        fetch_recipe(message, recipes)
+
+      is_input_a_command?(message, commands) ->
+        fetch_command(message, commands)
+
+      true ->
+        :invalid_input
+    end
   end
 
-  defp fetch_recipe(message) do
+  def downcase_and_trim(input) do
+    input
+    |> String.trim()
+    |> String.downcase()
+  end
+
+  def is_input_a_command?(message, commands) do
+    Map.has_key?(commands, message)
+  end
+
+  def fetch_command(message, commands) do
+    Map.fetch!(commands, message)
+  end
+
+  defp fetch_recipe(message, recipes) do
     if Enum.member?(Map.values(recipes), message) do
       message
     else
@@ -48,12 +77,7 @@ defmodule CommandLineUI do
     end
   end
 
-  defp is_input_a_recipe?(message) do
-    recipes =
-      Parser.prepare_recipe_index_map()
-      |> Map.keys()
-      |> Enum.with_index(1)
-      |> Enum.into(%{})
+  defp is_input_a_recipe?(message, recipes) do
     Enum.member?(Map.values(recipes), message) || Map.has_key?(recipes, message)
   end
 
