@@ -3,9 +3,9 @@ defmodule ControllerTest do
   import Controller
 
   describe "run/1" do
-    test "when passed 'Q', prints the quit message and leaves the context map unchanged." do
+    test "when passed :quit, prints the quit message and leaves the context map unchanged." do
       initial_context = %{
-        input: "Q",
+        input: :quit,
         content: nil,
         header: "Welcome to Recipe Book!",
         view: :welcome,
@@ -23,7 +23,7 @@ defmodule ControllerTest do
   describe "run/2" do
     test "can be passed a dummy UI and with the same API and not blow up" do
       initial_context = %{
-        input: "Q",
+        input: :quit,
         content: nil,
         header: "Welcome to Recipe Book!",
         view: :welcome,
@@ -41,7 +41,7 @@ defmodule ControllerTest do
   describe "update_context/1" do
     test "when view is :index, updates prompt, header, content and menu" do
       initial_context = %{
-        input: "I",
+        input: :index,
         content: nil,
         header: nil,
         view: :index,
@@ -78,9 +78,9 @@ defmodule ControllerTest do
   end
 
   describe "fetch_content/1" do
-    test "in view :welcome, when passed valid input 'I', changes view to :index and updates content" do
+    test "in view :welcome, when passed valid input :index, changes view to :index and updates content" do
       initial_context = %{
-        input: "I",
+        input: :index,
         content: nil,
         header: nil,
         view: :welcome,
@@ -246,7 +246,7 @@ defmodule ControllerTest do
 
     test "in view :index, when passed valid input 'Q', returns context with view :exit" do
       initial_context = %{
-        input: "Q",
+        input: :quit,
         content: nil,
         header: nil,
         view: :index,
@@ -261,9 +261,9 @@ defmodule ControllerTest do
       assert %{view: :exit} = updated_context
     end
 
-    test "in view :index, when passed invalid input '9', updates error message but not view" do
+    test "in view :index, when passed :invalid_input, updates error message but not view" do
       initial_context = %{
-        input: "46",
+        input: :invalid_input,
         content: nil,
         header: nil,
         view: :index,
@@ -277,15 +277,15 @@ defmodule ControllerTest do
 
       assert %{
                error:
-                 "We either don't have that recipe or I can't find it. \n:(. Please choose another recipe.\n"
+                 "I didn't understand that and I don't know what to do. Please enter a valid command.\n"
              } = updated_context
 
       assert %{view: :index} = updated_context
     end
 
-    test "in view :view_recipe, when passed valid input 'G', updates content and view" do
+    test "in view :view_recipe, when passed valid input :grocery_list, updates content and view" do
       initial_context = %{
-        input: "G",
+        input: :grocery_list,
         content: nil,
         header: nil,
         view: :view_recipe,
@@ -378,9 +378,9 @@ defmodule ControllerTest do
       assert %{view: :grocery_list} = updated_context
     end
 
-    test "in view :view_recipe, when passed valid input 'I', updates content and view" do
+    test "in view :view_recipe, when passed valid input :index, updates content and view" do
       initial_context = %{
-        input: "I",
+        input: :index,
         content: nil,
         header: nil,
         view: :view_recipe,
@@ -412,7 +412,7 @@ defmodule ControllerTest do
 
     test "in view :view_recipe, when passed valid input 'Q', returns context with view :exit" do
       initial_context = %{
-        input: "Q",
+        input: :quit,
         content: nil,
         header: nil,
         view: :view_recipe,
@@ -449,9 +449,9 @@ defmodule ControllerTest do
       assert %{view: :view_recipe} = updated_context
     end
 
-    test "in view :grocery_list, when passed valid input 'I', updates content and view" do
+    test "in view :grocery_list, when passed valid input :index, updates content and view" do
       initial_context = %{
-        input: "I",
+        input: :index,
         content: nil,
         header: nil,
         view: :grocery_list,
@@ -483,7 +483,7 @@ defmodule ControllerTest do
 
     test "in view :grocery_list, when passed valid input 'Q', returns context with view :exit" do
       initial_context = %{
-        input: "Q",
+        input: :quit,
         content: nil,
         header: nil,
         view: :grocery_list,
@@ -600,7 +600,7 @@ defmodule ControllerTest do
   describe "fetch_grocery_list/1" do
     test "takes a context and returns a context with view updated to :grocery_list, content, and last_input" do
       initial_context = %{
-        input: "G",
+        input: :grocery_list,
         content: nil,
         header: nil,
         view: :index,

@@ -24,7 +24,7 @@ defmodule CommandLineUI do
       Parser.prepare_recipe_index_map()
       |> Map.keys()
       |> Enum.with_index(1)
-      |> Enum.into(%{})
+      |> Enum.into(%{}, fn {k, v} -> {downcase_and_trim(k), "#{v}"} end)
 
     commands = %{
       "q" => :quit,
@@ -40,11 +40,11 @@ defmodule CommandLineUI do
     message = downcase_and_trim(input)
 
     cond do
-      is_input_a_recipe?(message, recipes) ->
-        fetch_recipe(message, recipes)
-
       is_input_a_command?(message, commands) ->
         fetch_command(message, commands)
+
+      is_input_a_recipe?(message, recipes) ->
+        fetch_recipe(message, recipes)
 
       true ->
         :invalid_input
@@ -77,7 +77,7 @@ defmodule CommandLineUI do
     end
   end
 
-  defp is_input_a_recipe?(message, recipes) do
+  def is_input_a_recipe?(message, recipes) do
     Enum.member?(Map.values(recipes), message) || Map.has_key?(recipes, message)
   end
 
