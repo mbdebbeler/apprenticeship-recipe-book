@@ -8,14 +8,13 @@ defmodule CommandLineUITest do
         content: nil,
         header: "Welcome to Recipe Book!",
         view: :welcome,
-        io: FakeIO,
         prompt: "Fake Prompt Message",
         menu: nil,
         error: nil,
         last_input: nil
       }
 
-      updated_context = get_input(initial_context)
+      updated_context = get_input(initial_context, FakeIO)
 
       assert %{input: "Y"} = updated_context
     end
@@ -24,12 +23,11 @@ defmodule CommandLineUITest do
       example_context = %{
         prompt:
           "I didn't understand that and I don't know what to do. Please enter a valid command.",
-        io: FakeIO,
         view: :welcome,
         input: nil
       }
 
-      updated_context = get_input(example_context)
+      updated_context = get_input(example_context, FakeIO)
 
       assert %{input: "!"} = updated_context
     end
@@ -41,14 +39,13 @@ defmodule CommandLineUITest do
         content: nil,
         header: "Welcome to Recipe Book!",
         view: :welcome,
-        io: FakeIO,
         prompt: "Fake Prompt Message",
         menu: nil,
         error: nil,
         last_input: nil
       }
 
-      updated_context = refresh_display(initial_context)
+      updated_context = refresh_display(initial_context, FakeIO)
 
       assert initial_context = updated_context
     end

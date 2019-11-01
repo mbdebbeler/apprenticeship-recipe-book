@@ -1,5 +1,5 @@
 defmodule CommandLineUI do
-  def get_input(%{prompt: prompt, io: io} = context) do
+  def get_input(%{prompt: prompt} = context, io \\ IO) do
     prompt
     |> io.gets()
     |> String.trim()
@@ -8,7 +8,7 @@ defmodule CommandLineUI do
     |> (fn input -> Map.put(context, :input, input) end).()
   end
 
-  def refresh_display(%{io: io} = context) do
+  def refresh_display(context, io \\ IO) do
     context
     |> clear_display(io)
     |> CommandLineFormatter.prepare_next_screen()

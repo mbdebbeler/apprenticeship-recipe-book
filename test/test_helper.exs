@@ -17,11 +17,11 @@ defmodule FakeIO do
 end
 
 defmodule FakeUI do
-  def get_input(context) do
+  def get_input(context, _io \\ FakeIO) do
     context
   end
 
-  def refresh_display(context) do
+  def refresh_display(context, _io \\ FakeIO) do
     context
   end
 end

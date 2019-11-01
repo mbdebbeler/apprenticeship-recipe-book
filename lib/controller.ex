@@ -5,7 +5,6 @@ defmodule Controller do
       header: nil,
       content: nil,
       view: :welcome,
-      io: IO,
       prompt: nil,
       menu: nil,
       error: nil,
