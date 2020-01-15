@@ -48,11 +48,7 @@ defmodule Parser do
 
     tokens
     |> filter_tokens_by_range(range)
-    |> trim_newlines()
-    |> trim_section_start()
-    |> trim_section_end()
-    |> chunk_by_line_number()
-    |> join_each_line()
+    |> handle_sub_recipes
   end
 
   def parse_directions(tokens) do
@@ -68,6 +64,204 @@ defmodule Parser do
     |> join_each_line()
     |> map_each_direction()
     |> update_first_direction_display_index()
+  end
+
+  def handle_sub_recipes(ingredients_range) do
+    if has_sub_recipe?(ingredients_range) do
+      ingredients_range
+      |> chunk_by_line_number
+      |> chunk_by_upcased_lines
+      |> Enum.map(fn recipe -> build_recipe_struct(recipe) end)
+    else
+      ingredients_range
+      |> chunk_by_line_number()
+      |> Enum.map(fn line -> build_ingredient_struct(line) end)
+    end
+  end
+
+  def chunk_by_upcased_lines(lines) do
+    lines
+    |> Enum.chunk_by(fn line ->
+      first_token = Enum.fetch!(line, 0)
+      {token, _line, _value} = first_token
+      token == :upcase_word
+    end)
+    |> Enum.chunk_every(2)
+  end
+
+  def build_recipe_struct(recipe) do
+    title =
+      recipe
+      |> Enum.slice(0, 1)
+      |> List.flatten()
+      |> unwrap_values
+      |> Enum.join()
+      |> String.trim()
+
+    ingredients =
+      recipe
+      |> Enum.slice(1, 1)
+      |> Enum.fetch!(0)
+      |> Enum.map(fn line -> build_ingredient_struct(line) end)
+
+    %Recipe{title: title, ingredients: ingredients}
+  end
+
+  def build_ingredient_struct(line) do
+    quantity = parse_quantity(line)
+    details = parse_details(line)
+    unit = parse_unit(line)
+    name = parse_name(line)
+
+    %Ingredient{quantity: quantity, details: details, unit: unit, name: name}
+  end
+
+  def parse_details(line) do
+    if start_index =
+         Enum.find_index(line, fn {token, _line, value} ->
+           :char == token && Enum.member?([',', '('], value)
+         end) do
+      range = start_index..-1
+
+      Enum.slice(line, range)
+      |> unwrap_values()
+      |> Enum.join()
+      |> String.trim(",")
+      |> String.trim()
+    else
+      nil
+    end
+  end
+
+  def parse_quantity(line) do
+    if Enum.find(line, fn {token, _line, _value} -> :int == token || :fraction == token end) do
+      handle_mixed_quantities(line)
+    else
+      nil
+    end
+  end
+
+  def handle_mixed_quantities(line) do
+    end_index =
+      Enum.find_index(line, fn {token, _line, _value} ->
+        :word == token
+      end)
+
+    range = 0..(end_index - 1)
+
+    Enum.slice(line, range)
+    |> unwrap_values()
+    |> Enum.join()
+    |> String.trim(",")
+    |> String.trim()
+  end
+
+  def parse_unit(line) do
+    units = [
+      'teaspoon',
+      'teaspoons',
+      'tablespoon',
+      'tablespoons',
+      'ounce',
+      'ounces',
+      'cup',
+      'cups',
+      'pint',
+      'pints',
+      'quart',
+      'quarts',
+      'gallon',
+      'gallons',
+      'pound',
+      'pounds',
+      'lb',
+      'lbs'
+    ]
+
+    if first_word =
+         Enum.find(line, fn {token, _line, _value} ->
+           :word == token
+         end) do
+      unit = unwrap_value(first_word)
+
+      if Enum.member?(units, unit) do
+        unit
+      else
+        nil
+      end
+    else
+      nil
+    end
+  end
+
+  def parse_name(line) do
+    name =
+      line
+      |> reject_details
+      |> reject_unit
+      |> reject_quantity
+      |> unwrap_values
+      |> Enum.join()
+      |> String.trim()
+
+    if name == "" do
+      nil
+    else
+      name
+    end
+  end
+
+  def reject_quantity(line) do
+    if start_index = Enum.find_index(line, fn {token, _line, _value} -> :word == token end) do
+      range = start_index..-1
+      Enum.slice(line, range)
+    else
+      line
+    end
+  end
+
+  def reject_unit(line) do
+    units = [
+      'teaspoon',
+      'teaspoons',
+      'tablespoon',
+      'tablespoons',
+      'ounce',
+      'ounces',
+      'cup',
+      'cups',
+      'pint',
+      'pints',
+      'quart',
+      'quarts',
+      'gallon',
+      'gallons',
+      'pound',
+      'pounds',
+      'lb',
+      'lbs'
+    ]
+
+    line
+    |> Enum.reject(fn {token, _line, value} ->
+      :word == token && Enum.member?(units, value)
+    end)
+  end
+
+  def reject_details(line) do
+    if end_index =
+         Enum.find_index(line, fn {token, _line, value} ->
+           :char == token && Enum.member?([','], value)
+         end) do
+      range = 0..(end_index - 1)
+      Enum.slice(line, range)
+    else
+      line
+    end
+  end
+
+  def has_sub_recipe?(tokens) do
+    Enum.any?(tokens, fn {token, _line, _value} -> :upcase_word == token end)
   end
 
   defp update_first_direction_display_index(direction_list) do
@@ -112,8 +306,7 @@ defmodule Parser do
     first_line =
       tokens |> filter_section_starts |> filter_ingredients_header |> unwrap_line_number
 
-    last_line =
-      tokens |> filter_section_starts |> filter_directions_header |> unwrap_line_number
+    last_line = tokens |> filter_section_starts |> filter_directions_header |> unwrap_line_number
 
     [first_line + 1, last_line - 1]
   end
@@ -162,6 +355,10 @@ defmodule Parser do
     Enum.map(tokens, fn {_token, _line, value} -> value end)
   end
 
+  defp unwrap_value({_token, _line, value}) do
+    value
+  end
+
   defp unwrap_line_number([{_token, line, _value}]) do
     line
   end
@@ -204,7 +401,7 @@ defmodule Parser do
       filepath
       |> parse_tokens()
 
-    generate_bulleted_list(recipe.ingredients)
+    recipe
   end
 
   def generate_bulleted_list(items) do
