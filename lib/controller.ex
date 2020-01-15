@@ -5,7 +5,6 @@ defmodule Controller do
       header: nil,
       content: nil,
       view: :welcome,
-      io: IO,
       prompt: nil,
       menu: nil,
       error: nil,
@@ -16,7 +15,7 @@ defmodule Controller do
 
   def run(context, ui \\ CommandLineUI)
 
-  def run(%{input: "Q"} = context, ui) do
+  def run(%{input: :quit} = context, ui) do
     context
     |> update_context()
     |> ui.refresh_display()
@@ -51,15 +50,19 @@ defmodule Controller do
   end
 
   defp update_content(context) do
-    context
+    %{context | error: nil}
     |> fetch_content()
   end
 
-  def fetch_content(%{input: "Q", view: _} = context) do
+  def fetch_content(%{input: :quit, view: _} = context) do
     %{context | view: :exit, content: nil}
   end
 
-  def fetch_content(%{input: "I", view: _} = context) do
+  def fetch_content(%{input: :invalid_input, view: _} = context) do
+    fetch_unknown_error(context)
+  end
+
+  def fetch_content(%{input: :index, view: _} = context) do
     content = Messages.get_recipe(:all)
     %{context | content: content, view: :index}
   end
@@ -77,14 +80,14 @@ defmodule Controller do
   end
 
   def fetch_content(%{input: input, view: :index} = context) do
-    if Enum.member?(1..10, String.to_integer(input)) do
+    if fetch_recipe(context) do
       fetch_recipe(context)
     else
       fetch_not_found_error(context)
     end
   end
 
-  def fetch_content(%{input: "G", view: :view_recipe, last_input: last_input} = context) do
+  def fetch_content(%{input: :grocery_list, view: :view_recipe, last_input: last_input} = context) do
     if Messages.get_recipe(last_input) do
       fetch_grocery_list(context)
     else
